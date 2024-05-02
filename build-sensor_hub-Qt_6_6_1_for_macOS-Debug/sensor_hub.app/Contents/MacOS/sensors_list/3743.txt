@@ -1,0 +1,4 @@
+ID: 3743
+Type: Dust Sensor
+Name: polvere1
+Precision: 0.1

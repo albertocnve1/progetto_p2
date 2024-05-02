@@ -1,0 +1,4 @@
+ID: 3744
+Type: Dust Sensor
+Name: caca
+Precision: 0.1
