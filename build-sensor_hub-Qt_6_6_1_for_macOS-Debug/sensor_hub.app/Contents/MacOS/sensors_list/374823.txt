@@ -1,4 +1,4 @@
-ID: 0
+ID: 374823
 Type: Dust Sensor
-Name: 
+Name: sabbia
 Precision: 0.1

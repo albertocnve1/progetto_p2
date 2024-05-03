@@ -17,7 +17,7 @@ sensor::sensor(std::string name) : sensorName(name)
 sensor::sensor(std::string name, unsigned int ID) {
     if (sensors.find(ID) != sensors.end())
     {
-        throw std::runtime_error("Sensor ID already exists");
+        return; // in caso il sensore con l'id specificato esista giò, non verrà aggiunto
     }
     sensorID = ID;
     sensorName = name;

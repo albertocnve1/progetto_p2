@@ -6,6 +6,7 @@
 #include <QLineEdit>
 #include <QHBoxLayout>
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent), layout(new QHBoxLayout(this)), detailsLabel("Dettagli del sensore qui")
 {
@@ -22,12 +23,13 @@ MainWindow::MainWindow(QWidget *parent)
     // Aggiungi i sensori alla lista
     for (const auto& pair : sensors) {
         sensor* s = pair.second;
-        listWidget.addItem(QString::fromStdString(s->getName()));
+        QString sensorInfo = QString::number(s->getID()) + ": " + QString::fromStdString(s->getName());
+        listWidget.addItem(sensorInfo);
     }
 
     // Imposta il fattore di estensione per i widget
-    layout->setStretchFactor(leftLayout, 1); // La colonna di sinistra sarà più piccola
-    layout->setStretchFactor(&detailsLabel, 3); // Lo spazio a destra sarà più grande
+    this->layout->setStretchFactor(leftLayout, 1); // La colonna di sinistra sarà più piccola
+    this->layout->setStretchFactor(&detailsLabel, 3); // Lo spazio a destra sarà più grande
 
     // Connetti la casella di ricerca al filtro
     connect(&searchBox, &QLineEdit::textChanged, this, &MainWindow::filterSensors);

@@ -1,4 +1,0 @@
-ID: 3
-Type: Temperature Sensor
-Name: termometro
-Precision: 0.3
