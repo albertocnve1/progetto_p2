@@ -15,7 +15,7 @@ public:
     static temperature_sensor* create(std::string name, double p);
     static temperature_sensor* create(std::string name, unsigned int ID, double p);
     double getTemperature() const;
-    double getPrecision() const;
+    double getPrecision() const override;
     temperature_sensor* clone() const override;
     std::string getSensorType() const override;
 };

@@ -15,7 +15,7 @@ public:
     static dust_sensor* create(std::string name, double p);
     static dust_sensor* create(std::string name, unsigned int ID, double p);
     double getDustLevel() const;
-    double getPrecision() const;
+    double getPrecision() const override;
     dust_sensor* clone() const override;
     std::string getSensorType() const override;
 };

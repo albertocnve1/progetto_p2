@@ -58,15 +58,19 @@ SOURCES       = ../sensor_hub/dust_sensor.cpp \
 		../sensor_hub/main.cpp \
 		../sensor_hub/mainwindow.cpp \
 		../sensor_hub/sensor.cpp \
-		../sensor_hub/temperature_sensor.cpp moc_mainwindow.cpp
+		../sensor_hub/sensordialog.cpp \
+		../sensor_hub/temperature_sensor.cpp moc_mainwindow.cpp \
+		moc_sensordialog.cpp
 OBJECTS       = dust_sensor.o \
 		humidity_sensor.o \
 		load_sensors.o \
 		main.o \
 		mainwindow.o \
 		sensor.o \
+		sensordialog.o \
 		temperature_sensor.o \
-		moc_mainwindow.o
+		moc_mainwindow.o \
+		moc_sensordialog.o
 DIST          = ../../../Qt/6.6.1/macos/mkspecs/features/spec_pre.prf \
 		../../../Qt/6.6.1/macos/mkspecs/features/device_config.prf \
 		../../../Qt/6.6.1/macos/mkspecs/common/unix.conf \
@@ -236,12 +240,14 @@ DIST          = ../../../Qt/6.6.1/macos/mkspecs/features/spec_pre.prf \
 		../sensor_hub/load_sensors.h \
 		../sensor_hub/mainwindow.h \
 		../sensor_hub/sensor.h \
+		../sensor_hub/sensordialog.h \
 		../sensor_hub/temperature_sensor.h ../sensor_hub/dust_sensor.cpp \
 		../sensor_hub/humidity_sensor.cpp \
 		../sensor_hub/load_sensors.cpp \
 		../sensor_hub/main.cpp \
 		../sensor_hub/mainwindow.cpp \
 		../sensor_hub/sensor.cpp \
+		../sensor_hub/sensordialog.cpp \
 		../sensor_hub/temperature_sensor.cpp
 QMAKE_TARGET  = sensor_hub
 DESTDIR       = 
@@ -628,8 +634,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../sensor_hub/dust_sensor.h ../sensor_hub/humidity_sensor.h ../sensor_hub/load_sensors.h ../sensor_hub/mainwindow.h ../sensor_hub/sensor.h ../sensor_hub/temperature_sensor.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../sensor_hub/dust_sensor.cpp ../sensor_hub/humidity_sensor.cpp ../sensor_hub/load_sensors.cpp ../sensor_hub/main.cpp ../sensor_hub/mainwindow.cpp ../sensor_hub/sensor.cpp ../sensor_hub/temperature_sensor.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../sensor_hub/dust_sensor.h ../sensor_hub/humidity_sensor.h ../sensor_hub/load_sensors.h ../sensor_hub/mainwindow.h ../sensor_hub/sensor.h ../sensor_hub/sensordialog.h ../sensor_hub/temperature_sensor.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../sensor_hub/dust_sensor.cpp ../sensor_hub/humidity_sensor.cpp ../sensor_hub/load_sensors.cpp ../sensor_hub/main.cpp ../sensor_hub/mainwindow.cpp ../sensor_hub/sensor.cpp ../sensor_hub/sensordialog.cpp ../sensor_hub/temperature_sensor.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../sensor_hub/mainwindow.ui $(DISTDIR)/
 
 
@@ -659,9 +665,9 @@ benchmark: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_mainwindow.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_sensordialog.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_sensordialog.cpp
 moc_mainwindow.cpp: ../sensor_hub/mainwindow.h \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QWidget \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qwidget.h \
@@ -677,6 +683,16 @@ moc_mainwindow.cpp: ../sensor_hub/mainwindow.h \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qpushbutton.h \
 		../../../Qt/6.6.1/macos/libexec/moc
 	/Users/albertocanavese/Qt/6.6.1/macos/libexec/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -D__cplusplus=199711L -D__APPLE_CC__=6000 -D__clang__ -D__clang_major__=14 -D__clang_minor__=0 -D__clang_patchlevel__=3 -D__GNUC__=4 -D__GNUC_MINOR__=2 -D__GNUC_PATCHLEVEL__=1 -I/Users/albertocanavese/Qt/6.6.1/macos/mkspecs/macx-clang -I/Users/albertocanavese/Desktop/progetto_P2/sensor_hub -I/Users/albertocanavese/Qt/6.6.1/macos/lib/QtWidgets.framework/Headers -I/Users/albertocanavese/Qt/6.6.1/macos/lib/QtGui.framework/Headers -I/Users/albertocanavese/Qt/6.6.1/macos/lib/QtCore.framework/Headers -I. -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 -I/Library/Developer/CommandLineTools/usr/lib/clang/14.0.3/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -I/Library/Developer/CommandLineTools/usr/include -F/Users/albertocanavese/Qt/6.6.1/macos/lib ../sensor_hub/mainwindow.h -o moc_mainwindow.cpp
+
+moc_sensordialog.cpp: ../sensor_hub/sensordialog.h \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QDialog \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qdialog.h \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QLineEdit \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qlineedit.h \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QComboBox \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qcombobox.h \
+		../../../Qt/6.6.1/macos/libexec/moc
+	/Users/albertocanavese/Qt/6.6.1/macos/libexec/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -D__cplusplus=199711L -D__APPLE_CC__=6000 -D__clang__ -D__clang_major__=14 -D__clang_minor__=0 -D__clang_patchlevel__=3 -D__GNUC__=4 -D__GNUC_MINOR__=2 -D__GNUC_PATCHLEVEL__=1 -I/Users/albertocanavese/Qt/6.6.1/macos/mkspecs/macx-clang -I/Users/albertocanavese/Desktop/progetto_P2/sensor_hub -I/Users/albertocanavese/Qt/6.6.1/macos/lib/QtWidgets.framework/Headers -I/Users/albertocanavese/Qt/6.6.1/macos/lib/QtGui.framework/Headers -I/Users/albertocanavese/Qt/6.6.1/macos/lib/QtCore.framework/Headers -I. -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 -I/Library/Developer/CommandLineTools/usr/lib/clang/14.0.3/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -I/Library/Developer/CommandLineTools/usr/include -F/Users/albertocanavese/Qt/6.6.1/macos/lib ../sensor_hub/sensordialog.h -o moc_sensordialog.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -775,6 +791,11 @@ mainwindow.o: ../sensor_hub/mainwindow.cpp ../sensor_hub/mainwindow.h \
 		../sensor_hub/dust_sensor.h \
 		../sensor_hub/temperature_sensor.h \
 		../sensor_hub/humidity_sensor.h \
+		../sensor_hub/sensordialog.h \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QDialog \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qdialog.h \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QComboBox \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qcombobox.h \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QVBoxLayout \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QFileDialog \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qfiledialog.h \
@@ -783,11 +804,29 @@ mainwindow.o: ../sensor_hub/mainwindow.cpp ../sensor_hub/mainwindow.h \
 		../../../Qt/6.6.1/macos/lib/QtCore.framework/Headers/QTextStream \
 		../../../Qt/6.6.1/macos/lib/QtCore.framework/Headers/qtextstream.h \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QMessageBox \
-		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qmessagebox.h
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qmessagebox.h \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QMenu \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qmenu.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../sensor_hub/mainwindow.cpp
 
 sensor.o: ../sensor_hub/sensor.cpp ../sensor_hub/sensor.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sensor.o ../sensor_hub/sensor.cpp
+
+sensordialog.o: ../sensor_hub/sensordialog.cpp ../sensor_hub/SensorDialog.h \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QDialog \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qdialog.h \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QLineEdit \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qlineedit.h \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QComboBox \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qcombobox.h \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QVBoxLayout \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qboxlayout.h \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QHBoxLayout \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QPushButton \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qpushbutton.h \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QLabel \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qlabel.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sensordialog.o ../sensor_hub/sensordialog.cpp
 
 temperature_sensor.o: ../sensor_hub/temperature_sensor.cpp ../sensor_hub/temperature_sensor.h \
 		../sensor_hub/sensor.h \
@@ -803,6 +842,9 @@ temperature_sensor.o: ../sensor_hub/temperature_sensor.cpp ../sensor_hub/tempera
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
+
+moc_sensordialog.o: moc_sensordialog.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_sensordialog.o moc_sensordialog.cpp
 
 ####### Install
 

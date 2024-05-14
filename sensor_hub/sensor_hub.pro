@@ -15,6 +15,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     sensor.cpp \
+    sensordialog.cpp \
     temperature_sensor.cpp
 
 HEADERS += \
@@ -23,6 +24,7 @@ HEADERS += \
     load_sensors.h \
     mainwindow.h \
     sensor.h \
+    sensordialog.h \
     temperature_sensor.h
 
 FORMS += \

@@ -15,7 +15,7 @@ public:
     static humidity_sensor* create(std::string name, double p);
     static humidity_sensor* create(std::string name, unsigned int ID, double p);
     double getHumidity() const;
-    double getPrecision() const;
+    double getPrecision() const override;
     humidity_sensor* clone() const override;
     std::string getSensorType() const override;
 };

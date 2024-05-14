@@ -21,6 +21,7 @@ public:
     unsigned int getID() const;
     std::string getName() const;
     virtual std::string getSensorType() const = 0;
+    virtual double getPrecision() const = 0;
     static std::unordered_map<unsigned int, sensor*>& getSensors();
 };
 

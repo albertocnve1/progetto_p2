@@ -5,6 +5,7 @@
 #include "dust_sensor.h"
 #include "temperature_sensor.h"
 #include "humidity_sensor.h"
+#include "sensordialog.h"
 
 #include <unordered_map>
 #include <QLineEdit>
@@ -139,5 +140,38 @@ void MainWindow::addSensor()
 
 void MainWindow::newSensor()
 {
-    // Implementa la logica per creare un nuovo sensore qui
+    SensorDialog dialog(this);
+    if (dialog.exec() == QDialog::Accepted) {
+        unsigned int id = dialog.idEdit->text().toUInt();
+        QString type = dialog.typeEdit->currentText();
+        QString name = dialog.nameEdit->text();
+        double precision = dialog.precisionEdit->text().toDouble();
+
+        if (type == "Humidity Sensor") {
+            humidity_sensor* sensor = humidity_sensor::create(name.toStdString(), id, precision);
+            createSensorFile(sensor);
+        } else if (type == "Dust Sensor") {
+            dust_sensor* sensor = dust_sensor::create(name.toStdString(), id, precision);
+            createSensorFile(sensor);
+        } else if (type == "Temperature Sensor") {
+            temperature_sensor* sensor = temperature_sensor::create(name.toStdString(), id, precision);
+            createSensorFile(sensor);
+        }
+    }
+}
+
+void MainWindow::createSensorFile(sensor* sensor)
+{
+    QString currentPath = QDir::currentPath();
+    QDir dir;
+    dir.mkdir(currentPath + "/sensors_list");
+    QFile file(currentPath + "/sensors_list/" + QString::number(sensor->getID()) + ".txt");
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&file);
+        out << "ID: " << sensor->getID() << "\n";
+        out << "Type: " << QString::fromStdString(sensor->getSensorType()) << "\n";
+        out << "Name: " << QString::fromStdString(sensor->getName()) << "\n";
+        out << "Precision: " << sensor->getPrecision() << "\n";
+    }
+    loadSensors();
 }
