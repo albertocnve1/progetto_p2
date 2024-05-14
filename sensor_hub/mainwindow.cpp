@@ -4,14 +4,23 @@
 
 #include <unordered_map>
 #include <QLineEdit>
+#include <QPushButton>
 #include <QHBoxLayout>
-
+#include <QVBoxLayout>
+#include <QListWidget>
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent), layout(new QHBoxLayout(this)), detailsLabel("Dettagli del sensore qui")
 {
+    // Crea un layout orizzontale per la barra di ricerca e il pulsante
+    QHBoxLayout *searchLayout = new QHBoxLayout;
+    QPushButton *addButton = new QPushButton("+");
+    searchLayout->addWidget(&searchBox);
+    searchLayout->addWidget(addButton);
+
+    // Crea il layout verticale di sinistra
     QVBoxLayout *leftLayout = new QVBoxLayout;
-    leftLayout->addWidget(&searchBox);
+    leftLayout->addLayout(searchLayout);  // Aggiungi il layout di ricerca
     leftLayout->addWidget(&listWidget);
 
     layout->addLayout(leftLayout);
@@ -34,6 +43,9 @@ MainWindow::MainWindow(QWidget *parent)
     // Connetti la casella di ricerca al filtro
     connect(&searchBox, &QLineEdit::textChanged, this, &MainWindow::filterSensors);
 
+    // Connetti il pulsante "addButton" a uno slot per aggiungere un nuovo sensore
+    connect(addButton, &QPushButton::clicked, this, &MainWindow::addSensor);
+
     resize(1000,500);
 }
 
@@ -47,4 +59,11 @@ void MainWindow::filterSensors(const QString &text)
         QListWidgetItem *item = listWidget.item(i);
         item->setHidden(!item->text().contains(text, Qt::CaseInsensitive));
     }
+}
+
+void MainWindow::addSensor()
+{
+    // Logica per aggiungere un nuovo sensore
+    // Questo potrebbe aprire una nuova finestra di dialogo per inserire i dettagli del sensore
+    // Oppure potrebbe semplicemente aggiungere un sensore predefinito alla lista
 }
