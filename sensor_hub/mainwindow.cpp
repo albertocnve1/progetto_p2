@@ -21,15 +21,17 @@
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent), layout(new QHBoxLayout(this)), detailsLabel("Dettagli del sensore qui")
 {
-    // Crea un layout orizzontale per la barra di ricerca e il pulsante
-    QHBoxLayout *searchLayout = new QHBoxLayout;
+    // Crea un layout orizzontale per i pulsanti
+    QHBoxLayout *buttonLayout = new QHBoxLayout;
     QPushButton *addButton = new QPushButton("+");
-    searchLayout->addWidget(&searchBox);
-    searchLayout->addWidget(addButton);
+    QPushButton *removeButton = new QPushButton("-");
+    buttonLayout->addWidget(&searchBox);
+    buttonLayout->addWidget(addButton);
+    buttonLayout->addWidget(removeButton);
 
     // Crea il layout verticale di sinistra
     QVBoxLayout *leftLayout = new QVBoxLayout;
-    leftLayout->addLayout(searchLayout);  // Aggiungi il layout di ricerca
+    leftLayout->addLayout(buttonLayout);  // Aggiungi il layout dei pulsanti
     leftLayout->addWidget(&listWidget);
 
     layout->addLayout(leftLayout);
@@ -125,5 +127,3 @@ void MainWindow::addSensor()
         }
     }
 }
-
-
