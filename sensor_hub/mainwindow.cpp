@@ -1,6 +1,10 @@
 #include "mainwindow.h"
 #include "sensor.h"
 #include "load_sensors.h"
+#include "sensor.h"
+#include "dust_sensor.h"
+#include "temperature_sensor.h"
+#include "humidity_sensor.h"
 
 #include <unordered_map>
 #include <QLineEdit>
@@ -8,6 +12,11 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QListWidget>
+#include <QFileDialog>
+#include <QFile>
+#include <QTextStream>
+#include <QMessageBox>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent), layout(new QHBoxLayout(this)), detailsLabel("Dettagli del sensore qui")
@@ -63,7 +72,58 @@ void MainWindow::filterSensors(const QString &text)
 
 void MainWindow::addSensor()
 {
-    // Logica per aggiungere un nuovo sensore
-    // Questo potrebbe aprire una nuova finestra di dialogo per inserire i dettagli del sensore
-    // Oppure potrebbe semplicemente aggiungere un sensore predefinito alla lista
+    QString fileName = QFileDialog::getOpenFileName(this,
+        tr("Seleziona file di testo"), "",
+        tr("Text Files (*.txt);;All Files (*)"));
+
+    if (fileName.isEmpty())
+        return;
+    else {
+        QFile file(fileName);
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QTextStream in(&file);
+            unsigned int id = 0;
+            std::string type, name;
+            double precision = 0.0;
+
+            while (!in.atEnd()) {
+                QString line = in.readLine();
+                QStringList parts = line.split(": ");
+                if (parts[0] == "ID") {
+                    id = parts[1].toUInt();
+                } else if (parts[0] == "Type") {
+                    type = parts[1].toStdString();
+                } else if (parts[0] == "Name") {
+                    name = parts[1].toStdString();
+                } else if (parts[0] == "Precision") {
+                    precision = parts[1].toDouble();
+                }
+            }
+
+            QString sensorInfo = QString::number(id) + ": " + QString::fromStdString(name);
+
+            try {
+                if (type == "Dust Sensor") {
+                    dust_sensor* sensor = dust_sensor::create(name, id, precision);
+                    // Aggiungi il sensore alla tua struttura dati qui
+                    listWidget.addItem(sensorInfo);
+                }
+                else if (type == "Temperature Sensor") {
+                    temperature_sensor* sensor = temperature_sensor::create(name, id, precision);
+                    // Aggiungi il sensore alla tua struttura dati qui
+                    listWidget.addItem(sensorInfo);
+                }
+                else if (type == "Humidity Sensor") {
+                    humidity_sensor* sensor = humidity_sensor::create(name, id, precision);
+                    // Aggiungi il sensore alla tua struttura dati qui
+                    listWidget.addItem(sensorInfo);
+                }
+            } catch (const std::runtime_error& e) {
+                // Gestisci l'errore qui, ad esempio mostrando un messaggio di errore all'utente
+                QMessageBox::warning(this, tr("Errore"), tr("ID del sensore già esistente"));
+            }
+        }
+    }
 }
+
+

@@ -1,0 +1,4 @@
+ID: 45
+Type: Temperature Sensor
+Name: test
+Precision: 0.3
