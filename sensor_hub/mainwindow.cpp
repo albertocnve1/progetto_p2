@@ -150,12 +150,18 @@ void MainWindow::newSensor()
         if (type == "Humidity Sensor") {
             humidity_sensor* sensor = humidity_sensor::create(name.toStdString(), id, precision);
             createSensorFile(sensor);
+            QString sensorInfo = QString::number(sensor->getID()) + ": " + QString::fromStdString(sensor->getName());
+            listWidget.addItem(sensorInfo);
         } else if (type == "Dust Sensor") {
             dust_sensor* sensor = dust_sensor::create(name.toStdString(), id, precision);
             createSensorFile(sensor);
+            QString sensorInfo = QString::number(sensor->getID()) + ": " + QString::fromStdString(sensor->getName());
+            listWidget.addItem(sensorInfo);
         } else if (type == "Temperature Sensor") {
             temperature_sensor* sensor = temperature_sensor::create(name.toStdString(), id, precision);
             createSensorFile(sensor);
+            QString sensorInfo = QString::number(sensor->getID()) + ": " + QString::fromStdString(sensor->getName());
+            listWidget.addItem(sensorInfo);
         }
     }
 }
@@ -173,5 +179,4 @@ void MainWindow::createSensorFile(sensor* sensor)
         out << "Name: " << QString::fromStdString(sensor->getName()) << "\n";
         out << "Precision: " << sensor->getPrecision() << "\n";
     }
-    loadSensors();
 }

@@ -681,6 +681,7 @@ moc_mainwindow.cpp: ../sensor_hub/mainwindow.h \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qboxlayout.h \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QPushButton \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qpushbutton.h \
+		../sensor_hub/sensor.h \
 		../../../Qt/6.6.1/macos/libexec/moc
 	/Users/albertocanavese/Qt/6.6.1/macos/libexec/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -D__cplusplus=199711L -D__APPLE_CC__=6000 -D__clang__ -D__clang_major__=14 -D__clang_minor__=0 -D__clang_patchlevel__=3 -D__GNUC__=4 -D__GNUC_MINOR__=2 -D__GNUC_PATCHLEVEL__=1 -I/Users/albertocanavese/Qt/6.6.1/macos/mkspecs/macx-clang -I/Users/albertocanavese/Desktop/progetto_P2/sensor_hub -I/Users/albertocanavese/Qt/6.6.1/macos/lib/QtWidgets.framework/Headers -I/Users/albertocanavese/Qt/6.6.1/macos/lib/QtGui.framework/Headers -I/Users/albertocanavese/Qt/6.6.1/macos/lib/QtCore.framework/Headers -I. -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 -I/Library/Developer/CommandLineTools/usr/lib/clang/14.0.3/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -I/Library/Developer/CommandLineTools/usr/include -F/Users/albertocanavese/Qt/6.6.1/macos/lib ../sensor_hub/mainwindow.h -o moc_mainwindow.cpp
 
@@ -812,7 +813,7 @@ mainwindow.o: ../sensor_hub/mainwindow.cpp ../sensor_hub/mainwindow.h \
 sensor.o: ../sensor_hub/sensor.cpp ../sensor_hub/sensor.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sensor.o ../sensor_hub/sensor.cpp
 
-sensordialog.o: ../sensor_hub/sensordialog.cpp ../sensor_hub/SensorDialog.h \
+sensordialog.o: ../sensor_hub/sensordialog.cpp ../sensor_hub/sensordialog.h \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QDialog \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qdialog.h \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QLineEdit \
