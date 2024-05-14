@@ -1,0 +1,4 @@
+ID: 123
+Type: Humidity Sensor
+Name: umidità
+Precision: 0.3

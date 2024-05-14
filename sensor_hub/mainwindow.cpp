@@ -16,7 +16,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QMessageBox>
-
+#include <QMenu>
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent), layout(new QHBoxLayout(this)), detailsLabel("Dettagli del sensore qui")
@@ -28,6 +28,20 @@ MainWindow::MainWindow(QWidget *parent)
     buttonLayout->addWidget(&searchBox);
     buttonLayout->addWidget(addButton);
     buttonLayout->addWidget(removeButton);
+
+    // Crea il menu per il pulsante "+"
+    QMenu *addMenu = new QMenu(this);
+    QAction *newSensorAction = new QAction(tr("Nuovo sensore"), this);
+    QAction *importFromFileAction = new QAction(tr("Importa da file"), this);
+    addMenu->addAction(newSensorAction);
+    addMenu->addAction(importFromFileAction);
+    addButton->setMenu(addMenu);
+
+    // Connetti il pulsante "addButton" a uno slot per aggiungere un nuovo sensore
+    connect(addButton, &QPushButton::clicked, this, &MainWindow::addSensor);
+    connect(newSensorAction, &QAction::triggered, this, &MainWindow::newSensor);
+    // Connetti l'azione "Importa da file" alla funzione addSensor
+    connect(importFromFileAction, &QAction::triggered, this, &MainWindow::addSensor);
 
     // Crea il layout verticale di sinistra
     QVBoxLayout *leftLayout = new QVBoxLayout;
@@ -54,8 +68,6 @@ MainWindow::MainWindow(QWidget *parent)
     // Connetti la casella di ricerca al filtro
     connect(&searchBox, &QLineEdit::textChanged, this, &MainWindow::filterSensors);
 
-    // Connetti il pulsante "addButton" a uno slot per aggiungere un nuovo sensore
-    connect(addButton, &QPushButton::clicked, this, &MainWindow::addSensor);
 
     resize(1000,500);
 }
@@ -107,17 +119,14 @@ void MainWindow::addSensor()
             try {
                 if (type == "Dust Sensor") {
                     dust_sensor* sensor = dust_sensor::create(name, id, precision);
-                    // Aggiungi il sensore alla tua struttura dati qui
                     listWidget.addItem(sensorInfo);
                 }
                 else if (type == "Temperature Sensor") {
                     temperature_sensor* sensor = temperature_sensor::create(name, id, precision);
-                    // Aggiungi il sensore alla tua struttura dati qui
                     listWidget.addItem(sensorInfo);
                 }
                 else if (type == "Humidity Sensor") {
                     humidity_sensor* sensor = humidity_sensor::create(name, id, precision);
-                    // Aggiungi il sensore alla tua struttura dati qui
                     listWidget.addItem(sensorInfo);
                 }
             } catch (const std::runtime_error& e) {
@@ -126,4 +135,9 @@ void MainWindow::addSensor()
             }
         }
     }
+}
+
+void MainWindow::newSensor()
+{
+    // Implementa la logica per creare un nuovo sensore qui
 }

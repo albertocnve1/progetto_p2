@@ -6,7 +6,7 @@
 #include <QLabel>
 #include <QListWidget>
 #include <QHBoxLayout>
-#include <QPushButton>  
+#include <QPushButton>
 
 class MainWindow : public QWidget
 {
@@ -19,6 +19,7 @@ public:
 private slots:
     void filterSensors(const QString &text);
     void addSensor();  // Dichiarazione dello slot per aggiungere un nuovo sensore
+    void newSensor();  // Dichiarazione dello slot per creare un nuovo sensore
 
 private:
     QHBoxLayout *layout;   // Layout principale orizzontale
