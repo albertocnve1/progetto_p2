@@ -16,10 +16,8 @@
 int main(int argc, char *argv[])
 {
     loadSensors();
-    //sensor* s1 = temperature_sensor::create("termometro", 0.3);
     QApplication app(argc, argv);
     MainWindow window;
     window.show();
-
     return app.exec();
 }

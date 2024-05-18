@@ -19,6 +19,7 @@ protected:
 public:
     virtual ~sensor();
     virtual sensor* clone() const = 0;
+    void setName(std::string newName);
     unsigned int getID() const;
     std::string getName() const;
     virtual std::string getSensorType() const = 0;

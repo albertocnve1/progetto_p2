@@ -29,6 +29,11 @@ sensor::~sensor()
     sensors.erase(sensorID);
 }
 
+void sensor::setName(std::string newName)
+{
+    this->sensorName = newName;
+}
+
 unsigned int sensor::getID() const
 {
     return sensorID;

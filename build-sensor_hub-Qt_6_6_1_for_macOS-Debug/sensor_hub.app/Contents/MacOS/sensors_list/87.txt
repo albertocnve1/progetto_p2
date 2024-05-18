@@ -1,0 +1,4 @@
+ID: 87
+Type: Dust Sensor
+Name: du
+Precision: 0.1

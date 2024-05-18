@@ -18,6 +18,7 @@
 #include <QTextStream>
 #include <QMessageBox>
 #include <QMenu>
+#include <QInputDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent), layout(new QHBoxLayout(this)), detailsLabel("Dettagli del sensore qui")
@@ -29,6 +30,9 @@ MainWindow::MainWindow(QWidget *parent)
     buttonLayout->addWidget(&searchBox);
     buttonLayout->addWidget(addButton);
     buttonLayout->addWidget(removeButton);
+
+    listWidget.setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(&listWidget, &QListWidget::customContextMenuRequested, this, &MainWindow::showContextMenu);
 
     // Crea il menu per il pulsante "+"
     QMenu *addMenu = new QMenu(this);
@@ -89,8 +93,8 @@ void MainWindow::filterSensors(const QString &text)
 void MainWindow::addSensor()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
-        tr("Seleziona file di testo"), "",
-        tr("Text Files (*.txt);;All Files (*)"));
+                                                    tr("Seleziona file di testo"), "",
+                                                    tr("Text Files (*.txt);;All Files (*)"));
 
     if (fileName.isEmpty())
         return;
@@ -207,3 +211,37 @@ void MainWindow::deleteSensor()
     }
 }
 
+void MainWindow::showContextMenu(const QPoint &pos)
+{
+    QListWidgetItem* selectedItem = listWidget.currentItem();
+    if (!selectedItem) {
+        QMessageBox::warning(this, tr("Errore"), tr("Nessun sensore selezionato"));
+        return;
+    }
+
+    QMenu contextMenu(tr("Context menu"), this);
+
+    QAction action1("Modifica", this);
+    connect(&action1, &QAction::triggered, this, &MainWindow::editSensor);
+    contextMenu.addAction(&action1);
+
+    contextMenu.exec(listWidget.mapToGlobal(pos));
+}
+
+void MainWindow::editSensor()
+{
+    QListWidgetItem* selectedItem = listWidget.currentItem();
+    if (!selectedItem) {
+        QMessageBox::warning(this, tr("Errore"), tr("Nessun sensore selezionato"));
+        return;
+    }
+
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("Modifica nome sensore"),
+                                         tr("Nome sensore:"), QLineEdit::Normal,
+                                         "", &ok);
+    if (ok && !text.isEmpty())
+    {
+        // Aggiungi il codice per modificare il nome del sensore qui
+    }
+}
