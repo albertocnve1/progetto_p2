@@ -24,6 +24,11 @@ sensor::sensor(std::string name, unsigned int ID) {
     sensors[ID] = this;
 }
 
+sensor::~sensor()
+{
+    sensors.erase(sensorID);
+}
+
 unsigned int sensor::getID() const
 {
     return sensorID;

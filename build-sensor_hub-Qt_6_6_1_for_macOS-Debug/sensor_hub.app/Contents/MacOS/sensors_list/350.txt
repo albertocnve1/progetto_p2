@@ -1,4 +1,0 @@
-ID: 350
-Type: Temperature Sensor
-Name: temperino
-Precision: 0.01

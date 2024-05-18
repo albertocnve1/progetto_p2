@@ -23,6 +23,7 @@ private slots:
     void addSensor();  // Dichiarazione dello slot per aggiungere un nuovo sensore
     void newSensor();  // Dichiarazione dello slot per creare un nuovo sensore
     void createSensorFile(sensor*);  // Dichiarazione dello slot per creare un sensore da un file
+    void deleteSensor();  // Dichiarazione dello slot per eliminare un sensore
 
 private:
     QHBoxLayout *layout;   // Layout principale orizzontale
@@ -30,6 +31,8 @@ private:
     QListWidget listWidget;  // Lista di sensori
     QLabel detailsLabel;   // Etichetta per i dettagli del sensore
     QPushButton *addButton; // Pulsante per aggiungere un nuovo sensore
+    QPushButton *removeButton; // Pulsante per rimuovere un sensore
+    
 };
 
 #endif // MAINWINDOW_H

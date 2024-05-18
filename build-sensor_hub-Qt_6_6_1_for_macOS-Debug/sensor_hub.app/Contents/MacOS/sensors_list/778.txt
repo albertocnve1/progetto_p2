@@ -1,4 +1,0 @@
-ID: 778
-Type: Humidity Sensor
-Name: umiditaaaa
-Precision: 0.001

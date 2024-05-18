@@ -1,4 +1,0 @@
-ID: 777
-Type: Humidity Sensor
-Name: umido
-Precision: 0.1

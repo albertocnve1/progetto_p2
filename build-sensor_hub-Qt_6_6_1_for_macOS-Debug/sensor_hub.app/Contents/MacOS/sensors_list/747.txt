@@ -1,4 +1,0 @@
-ID: 747
-Type: Dust Sensor
-Name: polveroine
-Precision: 0.01

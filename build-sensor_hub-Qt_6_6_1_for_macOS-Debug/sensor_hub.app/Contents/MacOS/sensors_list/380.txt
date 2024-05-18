@@ -1,4 +1,0 @@
-ID: 380
-Type: Temperature Sensor
-Name: Caldo
-Precision: 0.01

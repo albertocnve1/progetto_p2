@@ -17,6 +17,7 @@ protected:
     sensor(std::string name, unsigned int ID);
     virtual void createFile() const = 0;
 public:
+    virtual ~sensor();
     virtual sensor* clone() const = 0;
     unsigned int getID() const;
     std::string getName() const;

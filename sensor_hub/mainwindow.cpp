@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(newSensorAction, &QAction::triggered, this, &MainWindow::newSensor);
     // Connetti l'azione "Importa da file" alla funzione addSensor
     connect(importFromFileAction, &QAction::triggered, this, &MainWindow::addSensor);
+    connect(removeButton, SIGNAL(clicked()), this, SLOT(deleteSensor()));
 
     // Crea il layout verticale di sinistra
     QVBoxLayout *leftLayout = new QVBoxLayout;
@@ -180,3 +181,47 @@ void MainWindow::createSensorFile(sensor* sensor)
         out << "Precision: " << sensor->getPrecision() << "\n";
     }
 }
+
+void MainWindow::deleteSensor()
+{
+    QListWidgetItem* item = listWidget.currentItem();
+    if (!item) {
+        QMessageBox::warning(this, tr("Errore"), tr("Nessun sensore selezionato"));
+        return;
+    }
+
+    unsigned int id = item->text().split(":")[0].toUInt();
+
+    std::unordered_map<unsigned int, sensor*>& sensors = sensor::getSensors();
+    auto it = sensors.find(id);
+
+    if (it != sensors.end()) {
+        sensor* sensorToDelete = it->second;
+
+        // Blocca segnali
+        listWidget.blockSignals(true);
+
+        try {
+            delete sensorToDelete; // Questo chiamerà il distruttore virtuale
+        } catch (const std::exception& e) {
+            listWidget.blockSignals(false);
+            return;
+        }
+
+        // Rimuovi l'elemento dalla lista
+        delete listWidget.takeItem(listWidget.row(item));
+
+        // Ripristina segnali
+        listWidget.blockSignals(false);
+
+        // Cancella il file
+        QString currentPath = QDir::currentPath();
+        QFile file(currentPath + "/sensors_list/" + QString::number(id) + ".txt");
+        if (file.exists()) {
+            file.remove();
+        }
+    } else {
+        QMessageBox::warning(this, tr("Errore"), tr("Sensore non trovato"));
+    }
+}
+

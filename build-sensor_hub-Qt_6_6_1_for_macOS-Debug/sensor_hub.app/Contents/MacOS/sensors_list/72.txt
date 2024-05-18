@@ -1,4 +1,0 @@
-ID: 72
-Type: Dust Sensor
-Name: Polverone
-Precision: 0
