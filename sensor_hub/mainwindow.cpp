@@ -150,35 +150,17 @@ void MainWindow::newSensor()
 
         if (type == "Humidity Sensor") {
             humidity_sensor* sensor = humidity_sensor::create(name.toStdString(), id, precision);
-            createSensorFile(sensor);
             QString sensorInfo = QString::number(sensor->getID()) + ": " + QString::fromStdString(sensor->getName());
             listWidget.addItem(sensorInfo);
         } else if (type == "Dust Sensor") {
             dust_sensor* sensor = dust_sensor::create(name.toStdString(), id, precision);
-            createSensorFile(sensor);
             QString sensorInfo = QString::number(sensor->getID()) + ": " + QString::fromStdString(sensor->getName());
             listWidget.addItem(sensorInfo);
         } else if (type == "Temperature Sensor") {
             temperature_sensor* sensor = temperature_sensor::create(name.toStdString(), id, precision);
-            createSensorFile(sensor);
             QString sensorInfo = QString::number(sensor->getID()) + ": " + QString::fromStdString(sensor->getName());
             listWidget.addItem(sensorInfo);
         }
-    }
-}
-
-void MainWindow::createSensorFile(sensor* sensor)
-{
-    QString currentPath = QDir::currentPath();
-    QDir dir;
-    dir.mkdir(currentPath + "/sensors_list");
-    QFile file(currentPath + "/sensors_list/" + QString::number(sensor->getID()) + ".txt");
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QTextStream out(&file);
-        out << "ID: " << sensor->getID() << "\n";
-        out << "Type: " << QString::fromStdString(sensor->getSensorType()) << "\n";
-        out << "Name: " << QString::fromStdString(sensor->getName()) << "\n";
-        out << "Precision: " << sensor->getPrecision() << "\n";
     }
 }
 

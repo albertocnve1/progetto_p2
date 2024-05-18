@@ -22,7 +22,7 @@ private slots:
     void filterSensors(const QString &text);
     void addSensor();  // Dichiarazione dello slot per aggiungere un nuovo sensore
     void newSensor();  // Dichiarazione dello slot per creare un nuovo sensore
-    void createSensorFile(sensor*);  // Dichiarazione dello slot per creare un sensore da un file
+    //void createSensorFile(sensor*);  // Dichiarazione dello slot per creare un sensore da un file
     void deleteSensor();  // Dichiarazione dello slot per eliminare un sensore
 
 private:
