@@ -25,6 +25,7 @@ private slots:
     void deleteSensor();  // Dichiarazione dello slot per eliminare un sensore
     void showContextMenu(const QPoint &);  // Dichiarazione dello slot per mostrare il menu contestuale
     void editSensor();  // Dichiarazione dello slot per modificare un sensore
+    void exportSensor(); // Dichiarazione dello slot per esportare un sensore
 
 private:
     QHBoxLayout *layout;   // Layout principale orizzontale

@@ -221,13 +221,18 @@ void MainWindow::showContextMenu(const QPoint &pos)
 
     QMenu contextMenu(tr("Context menu"), this);
 
-    QAction action1("Modifica", this);
-    connect(&action1, &QAction::triggered, this, &MainWindow::editSensor);
-    contextMenu.addAction(&action1);
+    QAction actionEdit("Modifica", this);
+    connect(&actionEdit, &QAction::triggered, this, &MainWindow::editSensor);
+    contextMenu.addAction(&actionEdit);
+
+    QAction actionExport("Esporta", this);
+    connect(&actionExport, &QAction::triggered, this, &MainWindow::exportSensor);
+    contextMenu.addAction(&actionExport);
 
     contextMenu.exec(listWidget.mapToGlobal(pos));
 }
 
+// MainWindow.cpp
 void MainWindow::editSensor()
 {
     QListWidgetItem* selectedItem = listWidget.currentItem();
@@ -236,12 +241,74 @@ void MainWindow::editSensor()
         return;
     }
 
+    // Estrai l'ID del sensore dalla stringa visualizzata
+    QString itemText = selectedItem->text();
+    unsigned int id = itemText.split(":")[0].toUInt();
+
+    // Trova il sensore corrispondente
+    std::unordered_map<unsigned int, sensor*>& sensors = sensor::getSensors();
+    auto it = sensors.find(id);
+    if (it == sensors.end()) {
+        QMessageBox::warning(this, tr("Errore"), tr("Sensore non trovato"));
+        return;
+    }
+
+    sensor* sensorToEdit = it->second;
+
+    // Mostra una finestra di dialogo per inserire il nuovo nome
     bool ok;
-    QString text = QInputDialog::getText(this, tr("Modifica nome sensore"),
-                                         tr("Nome sensore:"), QLineEdit::Normal,
-                                         "", &ok);
+    QString text = QInputDialog::getText(this, tr("Modifica nome"),
+                                         tr("Inserisci il nuovo nome:"), QLineEdit::Normal,
+                                         QString::fromStdString(sensorToEdit->getName()), &ok);
     if (ok && !text.isEmpty())
     {
-        // Aggiungi il codice per modificare il nome del sensore qui
+        // Imposta il nuovo nome del sensore e aggiorna il file
+        sensorToEdit->setName(text.toStdString());
+
+        // Aggiorna il testo dell'elemento della lista
+        selectedItem->setText(QString::number(sensorToEdit->getID()) + ": " + text);
     }
 }
+
+void MainWindow::exportSensor()
+{
+    QListWidgetItem* selectedItem = listWidget.currentItem();
+    if (!selectedItem) {
+        QMessageBox::warning(this, tr("Errore"), tr("Nessun sensore selezionato"));
+        return;
+    }
+
+    // Estrai l'ID del sensore dalla stringa visualizzata
+    QString itemText = selectedItem->text();
+    unsigned int id = itemText.split(":")[0].toUInt();
+
+    // Trova il sensore corrispondente
+    std::unordered_map<unsigned int, sensor*>& sensors = sensor::getSensors();
+    auto it = sensors.find(id);
+    if (it == sensors.end()) {
+        QMessageBox::warning(this, tr("Errore"), tr("Sensore non trovato"));
+        return;
+    }
+
+    // Seleziona la cartella di destinazione
+    QString folderPath = QFileDialog::getExistingDirectory(this, tr("Seleziona cartella"));
+    if (folderPath.isEmpty()) {
+        return; // L'utente ha annullato l'operazione
+    }
+
+    // Costruisci i percorsi dei file di origine e destinazione
+    QString currentPath = QDir::currentPath();
+    QString sourceFilePath = currentPath + "/sensors_list/" + QString::number(id) + ".txt";
+    QString destinationFilePath = folderPath + "/" + QString::number(id) + ".txt";
+
+    // Copia il file nella cartella selezionata
+    if (QFile::exists(sourceFilePath)) {
+        QFile::copy(sourceFilePath, destinationFilePath);
+        QMessageBox::information(this, tr("Esportazione riuscita"), tr("File del sensore esportato con successo"));
+    } else {
+        QMessageBox::warning(this, tr("Errore"), tr("File del sensore non trovato"));
+    }
+}
+
+
+

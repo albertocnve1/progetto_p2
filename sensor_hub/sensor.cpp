@@ -32,6 +32,7 @@ sensor::~sensor()
 void sensor::setName(std::string newName)
 {
     this->sensorName = newName;
+    createFile();
 }
 
 unsigned int sensor::getID() const
