@@ -1,4 +1,0 @@
-ID: 87
-Type: Dust Sensor
-Name: polverone
-Precision: 0.1

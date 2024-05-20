@@ -1,6 +1,5 @@
 #include "humidity_sensor.h"
-#include <QFile>
-#include <QTextStream>
+
 #include <QDir>
 
 double humidity_sensor::getHumidity() const
@@ -29,7 +28,8 @@ void humidity_sensor::createFile() const
     QDir dir;
     dir.mkdir(currentPath + "/sensors_list");
     QFile file(currentPath + "/sensors_list/" + QString::number(getID()) + ".txt");
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
         QTextStream out(&file);
         out << "ID: " << getID() << "\n";
         out << "Type: " << QString::fromStdString(getSensorType()) << "\n";
@@ -41,13 +41,15 @@ void humidity_sensor::createFile() const
 humidity_sensor::humidity_sensor(std::string name, double p) : sensor(name), precision(p) {}
 humidity_sensor::humidity_sensor(std::string name, unsigned int ID, double p) : sensor(name, ID), precision(p) {}
 
-humidity_sensor* humidity_sensor::create(std::string name, double p) {
+humidity_sensor* humidity_sensor::create(std::string name, double p)
+{
     humidity_sensor* obj = new humidity_sensor(name, p);
     obj->createFile();
     return obj;
 }
 
-humidity_sensor* humidity_sensor::create(std::string name, unsigned int ID, double p) {
+humidity_sensor* humidity_sensor::create(std::string name, unsigned int ID, double p)
+{
     humidity_sensor* obj = new humidity_sensor(name, ID, p);
     obj->createFile();
     return obj;

@@ -1,5 +1,5 @@
 #include "sensordialog.h"
-#include <QVBoxLayout>
+
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QLabel>
@@ -12,9 +12,11 @@ SensorDialog::SensorDialog(QWidget *parent) : QDialog(parent)
     idEdit = new QLineEdit(this);
     layout->addWidget(idEdit);
 
-    layout->addWidget(new QLabel("Tipo di sensore:"));
+    layout->addWidget(new QLabel("Tipo:"));
     typeEdit = new QComboBox(this);
-    typeEdit->addItems(QStringList() << "Dust Sensor" << "Temperature Sensor" << "Humidity Sensor");
+    typeEdit->addItem("Humidity Sensor");
+    typeEdit->addItem("Dust Sensor");
+    typeEdit->addItem("Temperature Sensor");
     layout->addWidget(typeEdit);
 
     layout->addWidget(new QLabel("Nome:"));

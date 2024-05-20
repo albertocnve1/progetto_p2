@@ -1,13 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QWidget>
 #include <QLineEdit>
 #include <QLabel>
 #include <QListWidget>
 #include <QHBoxLayout>
 #include <QPushButton>
-#include "sensor.h"
 
 
 class MainWindow : public QWidget
@@ -34,7 +32,7 @@ private:
     QLabel detailsLabel;   // Etichetta per i dettagli del sensore
     QPushButton *addButton; // Pulsante per aggiungere un nuovo sensore
     QPushButton *removeButton; // Pulsante per rimuovere un sensore
-    
+
 };
 
 #endif // MAINWINDOW_H

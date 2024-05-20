@@ -1,12 +1,14 @@
 #include "sensor.h"
-
+#include <QDir>
+#include <QFile>
 
 unsigned int sensor::nextID = 0;
-std::unordered_map<unsigned int, sensor*> sensor::sensors;
+std::unordered_map<unsigned int, sensor *> sensor::sensors;
 
 sensor::sensor(std::string name) : sensorName(name)
 {
-    while (sensors.find(nextID) != sensors.end()) {
+    while (sensors.find(nextID) != sensors.end())
+    {
         ++nextID;
     }
     sensorID = nextID;
@@ -14,7 +16,8 @@ sensor::sensor(std::string name) : sensorName(name)
     ++nextID;
 }
 
-sensor::sensor(std::string name, unsigned int ID) {
+sensor::sensor(std::string name, unsigned int ID)
+{
     if (sensors.find(ID) != sensors.end())
     {
         throw std::runtime_error("Sensor ID already exists");
@@ -27,6 +30,14 @@ sensor::sensor(std::string name, unsigned int ID) {
 sensor::~sensor()
 {
     sensors.erase(sensorID);
+
+    // Cancella il file relativo al sensore
+    QString currentPath = QDir::currentPath();
+    QFile file(currentPath + "/sensors_list/" + QString::number(sensorID) + ".txt");
+    if (file.exists())
+    {
+        file.remove();
+    }
 }
 
 void sensor::setName(std::string newName)
@@ -45,8 +56,7 @@ std::string sensor::getName() const
     return sensorName;
 }
 
-std::unordered_map<unsigned int, sensor*>& sensor::getSensors() {
+std::unordered_map<unsigned int, sensor *> &sensor::getSensors()
+{
     return sensors;
 }
-
-

@@ -1,9 +1,6 @@
 #include "temperature_sensor.h"
-#include <QFile>
-#include <QTextStream>
-#include <QCoreApplication>
-#include <QDir>
 
+#include <QDir>
 
 double temperature_sensor::getTemperature() const
 {
@@ -54,5 +51,5 @@ temperature_sensor* temperature_sensor::create(std::string name, unsigned int ID
     obj->createFile();
     return obj;
 }
-#include "temperature_sensor.h"
+
 

@@ -1,9 +1,6 @@
 #include "dust_sensor.h"
-#include <QFile>
-#include <QTextStream>
+
 #include <QDir>
-
-
 
 double dust_sensor::getDustLevel() const
 {
@@ -43,13 +40,15 @@ void dust_sensor::createFile() const
 dust_sensor::dust_sensor(std::string name, double p) : sensor(name), precision(p) {}
 dust_sensor::dust_sensor(std::string name, unsigned int ID ,double p ) : sensor(name, ID), precision(p) {}
 
-dust_sensor* dust_sensor::create(std::string name, double p) {
+dust_sensor* dust_sensor::create(std::string name, double p)
+{
     dust_sensor* obj = new dust_sensor(name, p);
     obj->createFile();
     return obj;
 }
 
-dust_sensor* dust_sensor::create(std::string name, unsigned int ID, double p) {
+dust_sensor* dust_sensor::create(std::string name, unsigned int ID, double p)
+{
     dust_sensor* obj = new dust_sensor(name, ID, p);
     obj->createFile();
     return obj;

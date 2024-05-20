@@ -765,9 +765,6 @@ main.o: ../sensor_hub/main.cpp ../sensor_hub/mainwindow.h \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QPushButton \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qpushbutton.h \
 		../sensor_hub/sensor.h \
-		../sensor_hub/temperature_sensor.h \
-		../sensor_hub/dust_sensor.h \
-		../sensor_hub/humidity_sensor.h \
 		../sensor_hub/load_sensors.h \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QApplication \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qapplication.h \
@@ -788,7 +785,6 @@ mainwindow.o: ../sensor_hub/mainwindow.cpp ../sensor_hub/mainwindow.h \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QPushButton \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qpushbutton.h \
 		../sensor_hub/sensor.h \
-		../sensor_hub/load_sensors.h \
 		../sensor_hub/dust_sensor.h \
 		../sensor_hub/temperature_sensor.h \
 		../sensor_hub/humidity_sensor.h \
@@ -797,17 +793,14 @@ mainwindow.o: ../sensor_hub/mainwindow.cpp ../sensor_hub/mainwindow.h \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qdialog.h \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QComboBox \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qcombobox.h \
-		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QVBoxLayout \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QFileDialog \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qfiledialog.h \
-		../../../Qt/6.6.1/macos/lib/QtCore.framework/Headers/QFile \
-		../../../Qt/6.6.1/macos/lib/QtCore.framework/Headers/qfile.h \
-		../../../Qt/6.6.1/macos/lib/QtCore.framework/Headers/QTextStream \
-		../../../Qt/6.6.1/macos/lib/QtCore.framework/Headers/qtextstream.h \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QMessageBox \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qmessagebox.h \
 		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QMenu \
-		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qmenu.h
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qmenu.h \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/QInputDialog \
+		../../../Qt/6.6.1/macos/lib/QtWidgets.framework/Headers/qinputdialog.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../sensor_hub/mainwindow.cpp
 
 sensor.o: ../sensor_hub/sensor.cpp ../sensor_hub/sensor.h
