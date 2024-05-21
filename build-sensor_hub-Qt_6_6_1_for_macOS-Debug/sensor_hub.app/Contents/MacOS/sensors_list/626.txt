@@ -1,4 +1,0 @@
-ID: 626
-Type: Humidity Sensor
-Name: umite
-Precision: 0.11

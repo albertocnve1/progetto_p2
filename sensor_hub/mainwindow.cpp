@@ -9,10 +9,7 @@
 #include <QMenu>
 #include <QInputDialog>
 
-// #include <QtCharts/QChartView>
-// #include <QtCharts/QLineSeries>
-// #include <QtCharts/QValueAxis>
-
+#include <QtCharts>
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent), layout(new QHBoxLayout(this)), detailsLabel("Dettagli del sensore qui")
