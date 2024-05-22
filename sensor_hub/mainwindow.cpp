@@ -361,11 +361,23 @@ void MainWindow::displaySensorDetails()
     if (it != sensors.end())
     {
         sensor *s = it->second;
-        QString details = QString("ID: %1\nNome: %2\nTipo: %3\nPrecisione: %4")
-                              .arg(s->getID())
-                              .arg(QString::fromStdString(s->getName()))
-                              .arg(QString::fromStdString(s->getSensorType()))
-                              .arg(s->getPrecision());
+
+        QString details = QString("ID: %1\nNome: %2\nPrecisione: %3").arg(s->getID()).arg(QString::fromStdString(s->getName())).arg(s->getPrecision());
+
+        // Usare dynamic_cast per determinare il tipo di sensore
+        if (dynamic_cast<dust_sensor *>(s))
+        {
+            details += "\nTipo: Dust Sensor";
+        }
+        else if (dynamic_cast<temperature_sensor *>(s))
+        {
+            details += "\nTipo: Temperature Sensor";
+        }
+        else if (dynamic_cast<humidity_sensor *>(s))
+        {
+            details += "\nTipo: Humidity Sensor";
+        }
+
         detailsLabel.setText(details);
     }
     else
@@ -373,29 +385,6 @@ void MainWindow::displaySensorDetails()
         detailsLabel.setText("Dettagli del sensore qui");
     }
 }
-
-QString MainWindow::getAxisLabel(const std::string &sensorType)
-{
-    if (sensorType == "Temperature Sensor")
-    {
-        return "°C";
-    }
-    else if (sensorType == "Humidity Sensor")
-    {
-        return "% umidità nell'aria";
-    }
-    else if (sensorType == "Dust Sensor")
-    {
-        return "PM10 (µg/mc)";
-    }
-    else
-    {
-        return "";
-    }
-}
-
-
-
 
 void MainWindow::startSimulation()
 {
@@ -421,22 +410,28 @@ void MainWindow::startSimulation()
         QValueAxis *axisX = new QValueAxis;
         axisX->setTitleText("Tempo (s)");
         QValueAxis *axisY = new QValueAxis;
-        QString axisYLabel = getAxisLabel(s->getSensorType());
-        axisY->setTitleText(axisYLabel);
+
+        // Usare dynamic_cast per determinare il tipo di sensore e impostare i limiti dell'asse Y
+        if (dynamic_cast<dust_sensor *>(s))
+        {
+            axisY->setRange(0, 50);
+            axisY->setTitleText("PM10 (µg/mc)");
+        }
+        else if (dynamic_cast<temperature_sensor *>(s))
+        {
+            axisY->setRange(-20, 100);
+            axisY->setTitleText("°C");
+        }
+        else if (dynamic_cast<humidity_sensor *>(s))
+        {
+            axisY->setRange(0, 100);
+            axisY->setTitleText("% umidità nell'aria");
+        }
+
         chart->addAxis(axisX, Qt::AlignBottom);
         chart->addAxis(axisY, Qt::AlignLeft);
         series->attachAxis(axisX);
         series->attachAxis(axisY);
-
-        // Imposta i limiti dell'asse Y in base al tipo di sensore
-        std::string sensorType = s->getSensorType();
-        if (sensorType == "Temperature Sensor") {
-            axisY->setRange(-20, 100);
-        } else if (sensorType == "Humidity Sensor") {
-            axisY->setRange(0, 100);
-        } else if (sensorType == "Dust Sensor") {
-            axisY->setRange(0, 50);
-        }
 
         chartView->setChart(chart);
 
@@ -447,8 +442,6 @@ void MainWindow::startSimulation()
         QMessageBox::warning(this, tr("Errore"), tr("Sensore non trovato"));
     }
 }
-
-
 
 void MainWindow::stopSimulation()
 {
@@ -479,23 +472,28 @@ void MainWindow::handleNewSensorData(int sensorId, double time, double value)
             QValueAxis *axisX = new QValueAxis;
             axisX->setTitleText("Tempo (s)");
             QValueAxis *axisY = new QValueAxis;
-            QString axisYLabel = getAxisLabel(s->getSensorType());
-            axisY->setTitleText(axisYLabel);
+
+            // Usare dynamic_cast per determinare il tipo di sensore e impostare i limiti dell'asse Y
+            if (dynamic_cast<dust_sensor *>(s))
+            {
+                axisY->setRange(0, 50);
+                axisY->setTitleText("PM10 (µg/mc)");
+            }
+            else if (dynamic_cast<temperature_sensor *>(s))
+            {
+                axisY->setRange(-20, 100);
+                axisY->setTitleText("°C");
+            }
+            else if (dynamic_cast<humidity_sensor *>(s))
+            {
+                axisY->setRange(0, 100);
+                axisY->setTitleText("% umidità nell'aria");
+            }
 
             chart->addAxis(axisX, Qt::AlignBottom);
             chart->addAxis(axisY, Qt::AlignLeft);
             series->attachAxis(axisX);
             series->attachAxis(axisY);
-
-            // Imposta i limiti dell'asse Y in base al tipo di sensore
-            std::string sensorType = s->getSensorType();
-            if (sensorType == "Temperature Sensor") {
-                axisY->setRange(-20, 100);
-            } else if (sensorType == "Humidity Sensor") {
-                axisY->setRange(0, 100);
-            } else if (sensorType == "Dust Sensor") {
-                axisY->setRange(0, 50);
-            }
 
             chartView->setChart(chart);
         }
@@ -511,7 +509,19 @@ void MainWindow::handleNewSensorData(int sensorId, double time, double value)
         // Aggiorna il titolo dell'asse Y
         QValueAxis *axisY = qobject_cast<QValueAxis *>(chart->axisY(series));
         if (axisY) {
-            axisY->setTitleText(getAxisLabel(s->getSensorType()));
+            // Usare dynamic_cast per determinare il tipo di sensore e impostare il titolo dell'asse Y
+            if (dynamic_cast<dust_sensor *>(s))
+            {
+                axisY->setTitleText("PM10 (µg/mc)");
+            }
+            else if (dynamic_cast<temperature_sensor *>(s))
+            {
+                axisY->setTitleText("°C");
+            }
+            else if (dynamic_cast<humidity_sensor *>(s))
+            {
+                axisY->setTitleText("% umidità nell'aria");
+            }
         }
     }
     else
@@ -519,6 +529,3 @@ void MainWindow::handleNewSensorData(int sensorId, double time, double value)
         QMessageBox::warning(this, tr("Errore"), tr("Sensore non trovato"));
     }
 }
-
-
-

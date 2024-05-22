@@ -37,7 +37,6 @@ private slots:
     void startSimulation();
     void stopSimulation();  // Dichiarazione dello slot per interrompere la simulazione
     void handleNewSensorData(int sensorId, double time, double value);
-    QString getAxisLabel(const std::string &);
 
 private:
     QHBoxLayout *layout;
@@ -51,6 +50,7 @@ private:
     QPushButton *stopSimulationButton;  // Dichiarazione del pulsante per interrompere la simulazione
     QVBoxLayout *rightLayout;
     SensorSimulation *sensorSimulation;
+    QString getAxisLabel(const std::string &sensorType);
 };
 
 #endif // MAINWINDOW_H
