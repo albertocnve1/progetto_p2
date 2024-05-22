@@ -18,7 +18,7 @@
 #include <unordered_map>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QWidget(parent), layout(new QHBoxLayout(this)), detailsLabel("Dettagli del sensore qui"), chartView(new QChartView), startSimulationButton(new QPushButton("Avvia Simulazione")), stopSimulationButton(new QPushButton("Interrompi Simulazione"))
+    : QWidget(parent), layout(new QHBoxLayout(this)), detailsLabel(""), chartView(new QChartView), startSimulationButton(new QPushButton("Avvia Simulazione")), stopSimulationButton(new QPushButton("Interrompi Simulazione"))
 {
     // Creazione di un layout orizzontale per i pulsanti
     QHBoxLayout *buttonLayout = new QHBoxLayout;
@@ -425,7 +425,7 @@ void MainWindow::startSimulation()
         if (dynamic_cast<dust_sensor *>(s))
         {
             axisY->setRange(0, 50);
-            axisY->setTitleText("PM10 (µg/mc)");
+            axisY->setTitleText("PM10 (µg/m³)");
         }
         else if (dynamic_cast<temperature_sensor *>(s))
         {
@@ -443,6 +443,8 @@ void MainWindow::startSimulation()
         series->attachAxis(axisX);
         series->attachAxis(axisY);
 
+        chart->legend()->hide(); // Nascondere la leggenda
+
         chartView->setChart(chart);
 
         sensorSimulation->simulateSensor(id);
@@ -452,6 +454,7 @@ void MainWindow::startSimulation()
         QMessageBox::warning(this, tr("Errore"), tr("Sensore non trovato"));
     }
 }
+
 
 void MainWindow::stopSimulation()
 {
@@ -523,33 +526,47 @@ void MainWindow::handleNewSensorData(int sensorId, double time, double value)
             series->attachAxis(axisX);
             series->attachAxis(axisY);
 
+            chart->legend()->hide(); // Nascondere la leggenda
+
             chartView->setChart(chart);
         }
 
         series->append(time, value);
 
         // Aggiorna gli intervalli dell'asse X per assicurare che i dati siano visibili
-        QValueAxis *axisX = qobject_cast<QValueAxis *>(chart->axisX(series));
-        if (axisX) {
-            axisX->setRange(qMax(0.0, time - 10), time + 10);
+        QList<QAbstractAxis*> axesX = chart->axes(Qt::Horizontal, series);
+        if (!axesX.isEmpty()) {
+            QValueAxis *axisX = qobject_cast<QValueAxis *>(axesX.first());
+            if (axisX) {
+                axisX->setRange(qMax(0.0, time - 10), time + 10);
+            }
         }
 
         // Aggiorna il titolo dell'asse Y
-        QValueAxis *axisY = qobject_cast<QValueAxis *>(chart->axisY(series));
-        if (axisY) {
-            // Usare dynamic_cast per determinare il tipo di sensore e impostare il titolo dell'asse Y
-            if (dynamic_cast<dust_sensor *>(s))
-            {
-                axisY->setTitleText("PM10 (µg/m³)");
+        QList<QAbstractAxis*> axesY = chart->axes(Qt::Vertical, series);
+        if (!axesY.isEmpty()) {
+            QValueAxis *axisY = qobject_cast<QValueAxis *>(axesY.first());
+            if (axisY) {
+                // Usare dynamic_cast per determinare il tipo di sensore e impostare il titolo dell'asse Y
+                if (dynamic_cast<dust_sensor *>(s))
+                {
+                    axisY->setTitleText("PM10 (µg/m³)");
+                }
+                else if (dynamic_cast<temperature_sensor *>(s))
+                {
+                    axisY->setTitleText("°C");
+                }
+                else if (dynamic_cast<humidity_sensor *>(s))
+                {
+                    axisY->setTitleText("% umidità nell'aria");
+                }
             }
-            else if (dynamic_cast<temperature_sensor *>(s))
-            {
-                axisY->setTitleText("°C");
-            }
-            else if (dynamic_cast<humidity_sensor *>(s))
-            {
-                axisY->setTitleText("% umidità nell'aria");
-            }
+        }
+
+        // Nascondi la leggenda ogni volta che il grafico viene aggiornato
+        if (chart)
+        {
+            chart->legend()->hide();
         }
     }
     else
@@ -557,3 +574,6 @@ void MainWindow::handleNewSensorData(int sensorId, double time, double value)
         QMessageBox::warning(this, tr("Errore"), tr("Sensore non trovato"));
     }
 }
+
+
+

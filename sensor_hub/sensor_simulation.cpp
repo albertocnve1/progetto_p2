@@ -47,6 +47,9 @@ void SensorSimulation::generateSensorData()
             value = QRandomGenerator::global()->bounded(100.0);
         }
 
+        // Limita il valore a due cifre decimali
+        value = QString::number(value, 'f', 2).toDouble();
+
         qint64 timestamp = QDateTime::currentMSecsSinceEpoch();
         emit newSensorData(currentSensorId, (timestamp - startTime) / 1000.0, value);  // Usa il tempo relativo
 
