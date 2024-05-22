@@ -14,10 +14,10 @@ private:
 protected:
     sensor(std::string name);
     sensor(std::string name, unsigned int ID);
-    virtual void createFile() const = 0;
 public:
     virtual ~sensor();
     virtual sensor* clone() const = 0;
+    virtual void createFile() const = 0;
     void setName(std::string newName);
     unsigned int getID() const;
     std::string getName() const;

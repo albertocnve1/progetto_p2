@@ -37,14 +37,20 @@ void SensorSimulation::generateSensorData()
         if (dynamic_cast<dust_sensor *>(s))
         {
             value = QRandomGenerator::global()->bounded(50.0);
+            dynamic_cast<dust_sensor *>(s)->setDustLevel(value);
+            dynamic_cast<dust_sensor *>(s)->addChartData((QDateTime::currentMSecsSinceEpoch() - startTime) / 1000.0, value);
         }
         else if (dynamic_cast<temperature_sensor *>(s))
         {
             value = QRandomGenerator::global()->bounded(120.0) - 20.0;
+            dynamic_cast<temperature_sensor *>(s)->setTemperature(value);
+            dynamic_cast<temperature_sensor *>(s)->addChartData((QDateTime::currentMSecsSinceEpoch() - startTime) / 1000.0, value);
         }
         else if (dynamic_cast<humidity_sensor *>(s))
         {
             value = QRandomGenerator::global()->bounded(100.0);
+            dynamic_cast<humidity_sensor *>(s)->setHumidity(value);
+            dynamic_cast<humidity_sensor *>(s)->addChartData((QDateTime::currentMSecsSinceEpoch() - startTime) / 1000.0, value);
         }
 
         // Limita il valore a due cifre decimali
@@ -55,5 +61,12 @@ void SensorSimulation::generateSensorData()
 
         // Debug: stampa del valore generato
         qDebug() << "Generated value for sensor " << currentSensorId << ": " << value;
+
+        // Scrivi i nuovi dati nel file del sensore
+        s->createFile();
     }
 }
+
+
+
+

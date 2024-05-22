@@ -35,7 +35,26 @@ void humidity_sensor::createFile() const
         out << "Type: " << "Humidity Sensor" << "\n";
         out << "Name: " << QString::fromStdString(getName()) << "\n";
         out << "Precision: " << getPrecision() << "\n";
+
+        // Aggiungi i dati del grafico
+        out << "Chart Data:\n";
+        for (const auto& point : chartData)
+        {
+            out << point.first << "," << point.second << "\n";
+        }
     }
+}
+
+void humidity_sensor::addChartData(double time, double value) {
+    chartData.emplace_back(time, value);
+}
+
+const std::vector<std::pair<double, double>>& humidity_sensor::getChartData() const {
+    return chartData;
+}
+
+void humidity_sensor::clearChartData() {
+    chartData.clear();
 }
 
 humidity_sensor::humidity_sensor(std::string name, double p) : sensor(name), precision(p) {}

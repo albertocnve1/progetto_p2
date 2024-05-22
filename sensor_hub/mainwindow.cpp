@@ -128,6 +128,7 @@ void MainWindow::addSensor()
             unsigned int id = 0;
             std::string type, name;
             double precision = 0.0;
+            std::vector<std::pair<double, double>> chartData;
 
             while (!in.atEnd())
             {
@@ -149,6 +150,20 @@ void MainWindow::addSensor()
                 {
                     precision = parts[1].toDouble();
                 }
+                else if (parts[0] == "Chart Data")
+                {
+                    while (!in.atEnd())
+                    {
+                        QString dataLine = in.readLine();
+                        QStringList dataParts = dataLine.split(",");
+                        if (dataParts.size() == 2)
+                        {
+                            double time = dataParts[0].toDouble();
+                            double value = dataParts[1].toDouble();
+                            chartData.emplace_back(time, value);
+                        }
+                    }
+                }
             }
 
             QString sensorInfo = QString::number(id) + ": " + QString::fromStdString(name);
@@ -158,16 +173,28 @@ void MainWindow::addSensor()
                 if (type == "Dust Sensor")
                 {
                     dust_sensor *sensor = dust_sensor::create(name, id, precision);
+                    for (const auto& data : chartData)
+                    {
+                        sensor->addChartData(data.first, data.second);
+                    }
                     listWidget.addItem(sensorInfo);
                 }
                 else if (type == "Temperature Sensor")
                 {
                     temperature_sensor *sensor = temperature_sensor::create(name, id, precision);
+                    for (const auto& data : chartData)
+                    {
+                        sensor->addChartData(data.first, data.second);
+                    }
                     listWidget.addItem(sensorInfo);
                 }
                 else if (type == "Humidity Sensor")
                 {
                     humidity_sensor *sensor = humidity_sensor::create(name, id, precision);
+                    for (const auto& data : chartData)
+                    {
+                        sensor->addChartData(data.first, data.second);
+                    }
                     listWidget.addItem(sensorInfo);
                 }
             }
@@ -179,6 +206,8 @@ void MainWindow::addSensor()
         }
     }
 }
+
+
 
 void MainWindow::newSensor()
 {

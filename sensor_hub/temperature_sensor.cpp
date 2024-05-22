@@ -1,6 +1,8 @@
 #include "temperature_sensor.h"
 
 #include <QDir>
+#include <QFile>
+#include <QTextStream>
 
 double temperature_sensor::getTemperature() const
 {
@@ -28,13 +30,33 @@ void temperature_sensor::createFile() const
     QDir dir;
     dir.mkdir(currentPath + "/sensors_list");
     QFile file(currentPath + "/sensors_list/" + QString::number(getID()) + ".txt");
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
         QTextStream out(&file);
         out << "ID: " << getID() << "\n";
         out << "Type: " << "Temperature Sensor" << "\n";
         out << "Name: " << QString::fromStdString(getName()) << "\n";
         out << "Precision: " << getPrecision() << "\n";
+
+        // Aggiungi i dati del grafico
+        out << "Chart Data:\n";
+        for (const auto& point : chartData)
+        {
+            out << point.first << "," << point.second << "\n";
+        }
     }
+}
+
+void temperature_sensor::addChartData(double time, double value) {
+    chartData.emplace_back(time, value);
+}
+
+const std::vector<std::pair<double, double>>& temperature_sensor::getChartData() const {
+    return chartData;
+}
+
+void temperature_sensor::clearChartData() {
+    chartData.clear();
 }
 
 temperature_sensor::temperature_sensor(std::string name, double p) : sensor(name), precision(p) {}
