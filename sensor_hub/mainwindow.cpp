@@ -8,11 +8,17 @@
 #include <QMessageBox>
 #include <QMenu>
 #include <QInputDialog>
+#include <QRandomGenerator>
+#include <QTime>
 
-#include <QtCharts>
+#include <QtCharts/QChartView>
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QChart>
+#include <QtCharts/QValueAxis>
+#include <unordered_map>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QWidget(parent), layout(new QHBoxLayout(this)), detailsLabel("Dettagli del sensore qui")
+    : QWidget(parent), layout(new QHBoxLayout(this)), detailsLabel("Dettagli del sensore qui"), chartView(new QChartView), startSimulationButton(new QPushButton("Avvia Simulazione"))
 {
     // Creazione di un layout orizzontale per i pulsanti
     QHBoxLayout *buttonLayout = new QHBoxLayout;
@@ -24,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     listWidget.setContextMenuPolicy(Qt::CustomContextMenu);
     connect(&listWidget, &QListWidget::customContextMenuRequested, this, &MainWindow::showContextMenu);
+    connect(&listWidget, &QListWidget::itemSelectionChanged, this, &MainWindow::displaySensorDetails);
 
     // Creazione del menu per il pulsante "+"
     QMenu *addMenu = new QMenu(this);
@@ -46,7 +53,15 @@ MainWindow::MainWindow(QWidget *parent)
     leftLayout->addWidget(&listWidget);
 
     layout->addLayout(leftLayout);
-    layout->addWidget(&detailsLabel);
+
+    rightLayout = new QVBoxLayout;
+    rightLayout->addWidget(&detailsLabel);
+    rightLayout->addWidget(chartView);
+    rightLayout->addWidget(startSimulationButton);
+
+    layout->addLayout(rightLayout);
+
+    connect(startSimulationButton, &QPushButton::clicked, this, &MainWindow::startSimulation);
 
     // Ottenimento dell'elenco dei sensori istanziati
     std::unordered_map<unsigned int, sensor *> &sensors = sensor::getSensors();
@@ -61,7 +76,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Impostazione delle proporzioni dei widget
     this->layout->setStretchFactor(leftLayout, 1);
-    this->layout->setStretchFactor(&detailsLabel, 3);
+    this->layout->setStretchFactor(rightLayout, 3);
 
     // Connetti la casella di ricerca al filtro
     connect(&searchBox, &QLineEdit::textChanged, this, &MainWindow::filterSensors);
@@ -73,7 +88,7 @@ MainWindow::~MainWindow()
 {
 }
 
-// creazione della barra di ricerca per riceracare tra i sensori
+// Creazione della barra di ricerca per riceracare tra i sensori
 void MainWindow::filterSensors(const QString &text)
 {
     for (int i = 0; i < listWidget.count(); ++i)
@@ -83,7 +98,7 @@ void MainWindow::filterSensors(const QString &text)
     }
 }
 
-// funzione per aggiungere un nuovo sensore da file di testo
+// Funzione per aggiungere un nuovo sensore da file di testo
 void MainWindow::addSensor()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
@@ -184,7 +199,7 @@ void MainWindow::newSensor()
     }
 }
 
-// funzione per l'eliminazione di un sensore
+// Funzione per l'eliminazione di un sensore
 void MainWindow::deleteSensor()
 {
     QListWidgetItem *item = listWidget.currentItem();
@@ -226,7 +241,7 @@ void MainWindow::deleteSensor()
     }
 }
 
-// creazione di un menu contestuale per la modifica e esportazione di un sensore
+// Creazione di un menu contestuale per la modifica e esportazione di un sensore
 void MainWindow::showContextMenu(const QPoint &pos)
 {
     QListWidgetItem *selectedItem = listWidget.currentItem();
@@ -249,7 +264,7 @@ void MainWindow::showContextMenu(const QPoint &pos)
     contextMenu.exec(listWidget.mapToGlobal(pos));
 }
 
-// funzione che permette di rinominare un sensore
+// Funzione che permette di rinominare un sensore
 void MainWindow::editSensor()
 {
     QListWidgetItem *selectedItem = listWidget.currentItem();
@@ -288,7 +303,7 @@ void MainWindow::editSensor()
     }
 }
 
-// funzione per esportare un sensore sottoforma di file di testo
+// Funzione per esportare un sensore sottoforma di file di testo
 void MainWindow::exportSensor()
 {
     QListWidgetItem *selectedItem = listWidget.currentItem();
@@ -331,3 +346,101 @@ void MainWindow::exportSensor()
         QMessageBox::warning(this, tr("Errore"), tr("File del sensore non trovato"));
     }
 }
+
+// Mostra i dettagli del sensore selezionato
+void MainWindow::displaySensorDetails()
+{
+    QListWidgetItem *selectedItem = listWidget.currentItem();
+    if (!selectedItem)
+    {
+        detailsLabel.setText("Dettagli del sensore qui");
+        return;
+    }
+
+    unsigned int id = selectedItem->text().split(":")[0].toUInt();
+    std::unordered_map<unsigned int, sensor *> &sensors = sensor::getSensors();
+    auto it = sensors.find(id);
+    if (it != sensors.end())
+    {
+        sensor *s = it->second;
+        QString details = QString("ID: %1\nNome: %2\nTipo: %3\nPrecisione: %4")
+                              .arg(s->getID())
+                              .arg(QString::fromStdString(s->getName()))
+                              .arg(QString::fromStdString(s->getSensorType()))
+                              .arg(s->getPrecision());
+        detailsLabel.setText(details);
+    }
+    else
+    {
+        detailsLabel.setText("Dettagli del sensore qui");
+    }
+}
+
+QString MainWindow::getAxisLabel(const std::string &sensorType)
+{
+    if (sensorType == "temperature_sensor")
+    {
+        return "°C";
+    }
+    else if (sensorType == "humidity_sensor")
+    {
+        return "% di umidità nell'aria";
+    }
+    else if (sensorType == "dust_sensor")
+    {
+        return "PM10";
+    }
+    else
+    {
+        return "";
+    }
+}
+
+void MainWindow::startSimulation()
+{
+    QListWidgetItem *selectedItem = listWidget.currentItem();
+    if (!selectedItem)
+    {
+        QMessageBox::warning(this, tr("Errore"), tr("Nessun sensore selezionato"));
+        return;
+    }
+
+    unsigned int id = selectedItem->text().split(":")[0].toUInt();
+    std::unordered_map<unsigned int, sensor *> &sensors = sensor::getSensors();
+    auto it = sensors.find(id);
+    if (it != sensors.end())
+    {
+        sensor *s = it->second;
+
+        // Genera dati di simulazione
+        QLineSeries *series = new QLineSeries();
+        QRandomGenerator generator(QRandomGenerator::global()->generate()); // Inizializza un generatore locale con il seed globale
+        for (int i = 0; i < 100; ++i) // Simula 100 raccolte di dati
+        {
+            double value = generator.bounded(10.0); // Simulazione di dati casuali
+            series->append(i, value);
+        }
+
+        QChart *chart = new QChart();
+        chart->addSeries(series);
+        chart->setTitle("Simulazione del sensore " + QString::fromStdString(s->getName()));
+        chart->createDefaultAxes();
+
+        // Imposta i nomi degli assi
+        QValueAxis *axisX = new QValueAxis;
+        QValueAxis *axisY = new QValueAxis;
+        axisX->setTitleText("Tempo");
+        axisY->setTitleText(getAxisLabel(s->getSensorType()));
+
+        chart->setAxisX(axisX, series);
+        chart->setAxisY(axisY, series);
+
+        chartView->setChart(chart);
+    }
+    else
+    {
+        QMessageBox::warning(this, tr("Errore"), tr("Sensore non trovato"));
+    }
+}
+
+

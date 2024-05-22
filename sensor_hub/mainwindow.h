@@ -1,12 +1,20 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QWidget>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QPushButton>
+#include <QListWidget>
 #include <QLineEdit>
 #include <QLabel>
-#include <QListWidget>
-#include <QHBoxLayout>
-#include <QPushButton>
+#include <QPoint>
+#include <QChartView>
+#include <QLineSeries>
 
+QT_BEGIN_NAMESPACE
+namespace Ui { class MainWindow; }
+QT_END_NAMESPACE
 
 class MainWindow : public QWidget
 {
@@ -24,6 +32,9 @@ private slots:
     void showContextMenu(const QPoint &);  // Dichiarazione dello slot per mostrare il menu contestuale
     void editSensor();  // Dichiarazione dello slot per modificare un sensore
     void exportSensor(); // Dichiarazione dello slot per esportare un sensore
+    void displaySensorDetails();
+    void startSimulation();
+    QString getAxisLabel(const std::string &);
 
 private:
     QHBoxLayout *layout;   // Layout principale orizzontale
@@ -32,6 +43,9 @@ private:
     QLabel detailsLabel;   // Etichetta per i dettagli del sensore
     QPushButton *addButton; // Pulsante per aggiungere un nuovo sensore
     QPushButton *removeButton; // Pulsante per rimuovere un sensore
+    QChartView *chartView;
+    QPushButton *startSimulationButton;
+    QVBoxLayout *rightLayout;
 
 };
 
