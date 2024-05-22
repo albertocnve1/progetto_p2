@@ -18,7 +18,7 @@
 #include <unordered_map>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QWidget(parent), layout(new QHBoxLayout(this)), detailsLabel(""), chartView(new QChartView), startSimulationButton(new QPushButton("Avvia Simulazione")), stopSimulationButton(new QPushButton("Interrompi Simulazione"))
+    : QWidget(parent), layout(new QHBoxLayout(this)), detailsLabel(""), chartView(new QChartView), startSimulationButton(new QPushButton("Avvia nuova simulazione")), stopSimulationButton(new QPushButton("Interrompi Simulazione"))
 {
     // Creazione di un layout orizzontale per i pulsanti
     QHBoxLayout *buttonLayout = new QHBoxLayout;
@@ -206,6 +206,7 @@ void MainWindow::addSensor()
         }
     }
 }
+
 
 
 
@@ -499,6 +500,7 @@ void MainWindow::displaySensorDetails()
 
 
 
+
 void MainWindow::startSimulation()
 {
     QListWidgetItem *selectedItem = listWidget.currentItem();
@@ -514,6 +516,9 @@ void MainWindow::startSimulation()
     if (it != sensors.end())
     {
         sensor *s = it->second;
+
+        // Pulisci i dati del grafico esistenti
+        s->clearChartData();
 
         QChart *chart = new QChart();
         QLineSeries *series = new QLineSeries();
@@ -560,6 +565,8 @@ void MainWindow::startSimulation()
         QMessageBox::warning(this, tr("Errore"), tr("Sensore non trovato"));
     }
 }
+
+
 
 
 

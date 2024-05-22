@@ -1,6 +1,8 @@
 #include "dust_sensor.h"
 
 #include <QDir>
+#include <QFile>
+#include <QTextStream>
 
 double dust_sensor::getDustLevel() const
 {
@@ -46,12 +48,11 @@ void dust_sensor::createFile() const
     }
 }
 
-
 void dust_sensor::addChartData(double time, double value) {
     chartData.emplace_back(time, value);
 }
 
-const std::vector<std::pair<double, double>>& dust_sensor::getChartData() const {
+std::vector<std::pair<double, double>> dust_sensor::getChartData() const {
     return chartData;
 }
 

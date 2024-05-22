@@ -24,9 +24,9 @@ public:
     humidity_sensor* clone() const override;
     void setHumidity(double level); // Metodo per aggiornare il livello di umidità
 
-    void addChartData(double time, double value); // Dichiarazione del nuovo metodo
-    const std::vector<std::pair<double, double>>& getChartData() const; // Dichiarazione del nuovo metodo
-    void clearChartData(); // Dichiarazione del nuovo metodo
+    void addChartData(double time, double value) override; // Dichiarazione del nuovo metodo
+    std::vector<std::pair<double, double>> getChartData() const override; // Dichiarazione del nuovo metodo
+    void clearChartData() override; // Dichiarazione del nuovo metodo marcato come const
 };
 
 #endif // HUMIDITY_SENSOR_H

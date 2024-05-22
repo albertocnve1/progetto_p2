@@ -24,9 +24,9 @@ public:
     dust_sensor* clone() const override;
     void setDustLevel(double level); // Metodo per aggiornare il livello di polvere
 
-    void addChartData(double time, double value); // Dichiarazione del nuovo metodo
-    const std::vector<std::pair<double, double>>& getChartData() const; // Dichiarazione del nuovo metodo
-    void clearChartData(); // Dichiarazione del nuovo metodo
+    void addChartData(double time, double value) override; // Dichiarazione del nuovo metodo
+    std::vector<std::pair<double, double>> getChartData() const override; // Dichiarazione del nuovo metodo
+    void clearChartData() override; // Dichiarazione del nuovo metodo
 };
 
 #endif // DUST_SENSOR_H

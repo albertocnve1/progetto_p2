@@ -53,7 +53,7 @@ void temperature_sensor::addChartData(double time, double value) {
     chartData.emplace_back(time, value);
 }
 
-const std::vector<std::pair<double, double>>& temperature_sensor::getChartData() const {
+std::vector<std::pair<double, double>> temperature_sensor::getChartData() const {
     return chartData;
 }
 

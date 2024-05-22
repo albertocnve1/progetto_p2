@@ -1,6 +1,7 @@
 #include "humidity_sensor.h"
-
 #include <QDir>
+#include <QFile>
+#include <QTextStream>
 
 double humidity_sensor::getHumidity() const
 {
@@ -46,12 +47,11 @@ void humidity_sensor::createFile() const
     }
 }
 
-
 void humidity_sensor::addChartData(double time, double value) {
     chartData.emplace_back(time, value);
 }
 
-const std::vector<std::pair<double, double>>& humidity_sensor::getChartData() const {
+std::vector<std::pair<double, double>> humidity_sensor::getChartData() const {
     return chartData;
 }
 
