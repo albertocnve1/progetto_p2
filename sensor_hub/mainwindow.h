@@ -11,6 +11,7 @@
 #include <QPoint>
 #include <QChartView>
 #include <QLineSeries>
+#include "sensor_simulation.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -26,27 +27,30 @@ public:
 
 private slots:
     void filterSensors(const QString &text);
-    void addSensor();  // Dichiarazione dello slot per aggiungere un nuovo sensore
-    void newSensor();  // Dichiarazione dello slot per creare un nuovo sensore
-    void deleteSensor();  // Dichiarazione dello slot per eliminare un sensore
-    void showContextMenu(const QPoint &);  // Dichiarazione dello slot per mostrare il menu contestuale
-    void editSensor();  // Dichiarazione dello slot per modificare un sensore
-    void exportSensor(); // Dichiarazione dello slot per esportare un sensore
+    void addSensor();
+    void newSensor();
+    void deleteSensor();
+    void showContextMenu(const QPoint &);
+    void editSensor();
+    void exportSensor();
     void displaySensorDetails();
     void startSimulation();
+    void stopSimulation();  // Dichiarazione dello slot per interrompere la simulazione
+    void handleNewSensorData(int sensorId, double time, double value);
     QString getAxisLabel(const std::string &);
 
 private:
-    QHBoxLayout *layout;   // Layout principale orizzontale
-    QLineEdit searchBox;   // Casella di ricerca
-    QListWidget listWidget;  // Lista di sensori
-    QLabel detailsLabel;   // Etichetta per i dettagli del sensore
-    QPushButton *addButton; // Pulsante per aggiungere un nuovo sensore
-    QPushButton *removeButton; // Pulsante per rimuovere un sensore
+    QHBoxLayout *layout;
+    QLineEdit searchBox;
+    QListWidget listWidget;
+    QLabel detailsLabel;
+    QPushButton *addButton;
+    QPushButton *removeButton;
     QChartView *chartView;
     QPushButton *startSimulationButton;
+    QPushButton *stopSimulationButton;  // Dichiarazione del pulsante per interrompere la simulazione
     QVBoxLayout *rightLayout;
-
+    SensorSimulation *sensorSimulation;
 };
 
 #endif // MAINWINDOW_H
