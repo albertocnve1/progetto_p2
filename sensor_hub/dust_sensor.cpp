@@ -28,22 +28,24 @@ void dust_sensor::createFile() const
     QDir dir;
     dir.mkdir(currentPath + "/sensors_list");
     QFile file(currentPath + "/sensors_list/" + QString::number(getID()) + ".txt");
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text))
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append)) // Cambiato in Append
     {
         QTextStream out(&file);
-        out << "ID: " << getID() << "\n";
-        out << "Type: " << "Dust Sensor" << "\n";
-        out << "Name: " << QString::fromStdString(getName()) << "\n";
-        out << "Precision: " << getPrecision() << "\n";
+        if (file.size() == 0) { // Scrive l'intestazione solo se il file è vuoto
+            out << "ID: " << getID() << "\n";
+            out << "Type: " << "Dust Sensor" << "\n";
+            out << "Name: " << QString::fromStdString(getName()) << "\n";
+            out << "Precision: " << getPrecision() << "\n";
+            out << "Chart Data:\n";
+        }
 
-        // Aggiungi i dati del grafico
-        out << "Chart Data:\n";
         for (const auto& point : chartData)
         {
             out << point.first << "," << point.second << "\n";
         }
     }
 }
+
 
 void dust_sensor::addChartData(double time, double value) {
     chartData.emplace_back(time, value);

@@ -17,9 +17,18 @@ void SensorSimulation::simulateSensor(unsigned int sensorId)
     if (sensors.find(sensorId) != sensors.end())
     {
         startTime = QDateTime::currentMSecsSinceEpoch();
+        sensor* s = sensors[sensorId];
+        if (dynamic_cast<dust_sensor*>(s)) {
+            dynamic_cast<dust_sensor*>(s)->clearChartData();
+        } else if (dynamic_cast<temperature_sensor*>(s)) {
+            dynamic_cast<temperature_sensor*>(s)->clearChartData();
+        } else if (dynamic_cast<humidity_sensor*>(s)) {
+            dynamic_cast<humidity_sensor*>(s)->clearChartData();
+        }
         simulationTimer->start(1000); // Genera dati ogni secondo
     }
 }
+
 
 void SensorSimulation::stopSimulation()
 {
