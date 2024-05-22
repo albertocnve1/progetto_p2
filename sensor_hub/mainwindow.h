@@ -51,6 +51,8 @@ private:
     QVBoxLayout *rightLayout;
     SensorSimulation *sensorSimulation;
     QString getAxisLabel(const std::string &sensorType);
+    QLabel currentValueLabel; // Nuovo QLabel per il valore della misurazione attuale
+
 };
 
 #endif // MAINWINDOW_H

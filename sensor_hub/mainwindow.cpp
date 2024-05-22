@@ -56,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     rightLayout = new QVBoxLayout;
     rightLayout->addWidget(&detailsLabel);
+    rightLayout->addWidget(&currentValueLabel); // Aggiungiamo il currentValueLabel al layout
     rightLayout->addWidget(chartView);
 
     QHBoxLayout *simulationButtonsLayout = new QHBoxLayout; // Layout orizzontale per i pulsanti di simulazione
@@ -65,6 +66,7 @@ MainWindow::MainWindow(QWidget *parent)
     rightLayout->addLayout(simulationButtonsLayout); // Aggiungi il layout dei pulsanti di simulazione
 
     layout->addLayout(rightLayout);
+
 
     connect(startSimulationButton, &QPushButton::clicked, this, &MainWindow::startSimulation);
     connect(stopSimulationButton, &QPushButton::clicked, this, &MainWindow::stopSimulation);  // Connessione del pulsante allo slot
@@ -352,6 +354,7 @@ void MainWindow::displaySensorDetails()
     if (!selectedItem)
     {
         detailsLabel.setText("Dettagli del sensore qui");
+        currentValueLabel.setText(""); // Nascondi il valore della misurazione attuale
         return;
     }
 
@@ -368,23 +371,30 @@ void MainWindow::displaySensorDetails()
         if (dynamic_cast<dust_sensor *>(s))
         {
             details += "\nTipo: Dust Sensor";
+            currentValueLabel.setText(QString("Livello PM10 attuale: %1 μg/m³").arg(dynamic_cast<dust_sensor *>(s)->getDustLevel()));
         }
         else if (dynamic_cast<temperature_sensor *>(s))
         {
             details += "\nTipo: Temperature Sensor";
+            currentValueLabel.setText(QString("Temperatura attuale: %1 °C").arg(dynamic_cast<temperature_sensor *>(s)->getTemperature()));
         }
         else if (dynamic_cast<humidity_sensor *>(s))
         {
             details += "\nTipo: Humidity Sensor";
+            currentValueLabel.setText(QString("Livello umidità attuale: %1 %").arg(dynamic_cast<humidity_sensor *>(s)->getHumidity()));
         }
 
         detailsLabel.setText(details);
     }
     else
     {
-        detailsLabel.setText("Dettagli del sensore qui");
+        detailsLabel.setText("Seleziona un sensore per mostrare i dettagli");
+        currentValueLabel.setText(""); // Nascondi il valore della misurazione attuale
     }
 }
+
+
+
 
 void MainWindow::startSimulation()
 {
@@ -456,6 +466,24 @@ void MainWindow::handleNewSensorData(int sensorId, double time, double value)
     {
         sensor *s = it->second;
 
+        // Aggiorna il valore della misurazione attuale
+        if (dynamic_cast<dust_sensor *>(s))
+        {
+            dynamic_cast<dust_sensor *>(s)->setDustLevel(value);
+            currentValueLabel.setText(QString("Livello PM10 attuale: %1 μg/m³").arg(value));
+        }
+        else if (dynamic_cast<temperature_sensor *>(s))
+        {
+            dynamic_cast<temperature_sensor *>(s)->setTemperature(value);
+            currentValueLabel.setText(QString("Temperatura attuale: %1 °C").arg(value));
+        }
+        else if (dynamic_cast<humidity_sensor *>(s))
+        {
+            dynamic_cast<humidity_sensor *>(s)->setHumidity(value);
+            currentValueLabel.setText(QString("Livello umidità attuale: %1 %").arg(value));
+        }
+
+        // [Codice esistente per aggiornare il grafico]
         QLineSeries *series;
         QChart *chart = chartView->chart();
         if (chart && chart->series().size() > 0)
@@ -477,7 +505,7 @@ void MainWindow::handleNewSensorData(int sensorId, double time, double value)
             if (dynamic_cast<dust_sensor *>(s))
             {
                 axisY->setRange(0, 50);
-                axisY->setTitleText("PM10 (µg/mc)");
+                axisY->setTitleText("PM10 (µg/m³)");
             }
             else if (dynamic_cast<temperature_sensor *>(s))
             {
@@ -512,7 +540,7 @@ void MainWindow::handleNewSensorData(int sensorId, double time, double value)
             // Usare dynamic_cast per determinare il tipo di sensore e impostare il titolo dell'asse Y
             if (dynamic_cast<dust_sensor *>(s))
             {
-                axisY->setTitleText("PM10 (µg/mc)");
+                axisY->setTitleText("PM10 (µg/m³)");
             }
             else if (dynamic_cast<temperature_sensor *>(s))
             {
