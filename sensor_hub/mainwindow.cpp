@@ -445,6 +445,9 @@ void MainWindow::startSimulation()
 
         chart->legend()->hide(); // Nascondere la leggenda
 
+        // Imposta un intervallo iniziale di 20 secondi per l'asse X
+        axisX->setRange(0, 20);
+
         chartView->setChart(chart);
 
         sensorSimulation->simulateSensor(id);
@@ -454,6 +457,7 @@ void MainWindow::startSimulation()
         QMessageBox::warning(this, tr("Errore"), tr("Sensore non trovato"));
     }
 }
+
 
 
 void MainWindow::stopSimulation()
@@ -486,7 +490,6 @@ void MainWindow::handleNewSensorData(int sensorId, double time, double value)
             currentValueLabel.setText(QString("Livello umidità attuale: %1 %").arg(value));
         }
 
-        // [Codice esistente per aggiornare il grafico]
         QLineSeries *series;
         QChart *chart = chartView->chart();
         if (chart && chart->series().size() > 0)
@@ -528,6 +531,9 @@ void MainWindow::handleNewSensorData(int sensorId, double time, double value)
 
             chart->legend()->hide(); // Nascondere la leggenda
 
+            // Imposta un intervallo iniziale di 20 secondi per l'asse X
+            axisX->setRange(0, 20);
+
             chartView->setChart(chart);
         }
 
@@ -538,7 +544,10 @@ void MainWindow::handleNewSensorData(int sensorId, double time, double value)
         if (!axesX.isEmpty()) {
             QValueAxis *axisX = qobject_cast<QValueAxis *>(axesX.first());
             if (axisX) {
-                axisX->setRange(qMax(0.0, time - 10), time + 10);
+                double currentMax = axisX->max();
+                if (time > currentMax) {
+                    axisX->setRange(0, currentMax * 2); // Raddoppia l'intervallo dell'asse X
+                }
             }
         }
 
@@ -574,6 +583,7 @@ void MainWindow::handleNewSensorData(int sensorId, double time, double value)
         QMessageBox::warning(this, tr("Errore"), tr("Sensore non trovato"));
     }
 }
+
 
 
 
