@@ -17,7 +17,6 @@ public:
     double getTemperature() const;
     double getPrecision() const override;
     temperature_sensor* clone() const override;
-    std::string getSensorType() const override;
 };
 
 #endif // TEMPERATURE_SENSOR_H

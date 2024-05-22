@@ -17,7 +17,6 @@ public:
     double getHumidity() const;
     double getPrecision() const override;
     humidity_sensor* clone() const override;
-    std::string getSensorType() const override;
 };
 
 #endif // HUMIDITY_SENSOR_H

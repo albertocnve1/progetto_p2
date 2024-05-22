@@ -17,7 +17,6 @@ public:
     double getDustLevel() const;
     double getPrecision() const override;
     dust_sensor* clone() const override;
-    std::string getSensorType() const override;
 };
 
 #endif // DUST_SENSOR_H
