@@ -17,6 +17,11 @@ dust_sensor* dust_sensor::clone() const
     return new dust_sensor(*this);
 }
 
+void dust_sensor::setDustLevel(double level)
+{
+    dustLevel = level;
+}
+
 void dust_sensor::createFile() const
 {
     QString currentPath = QDir::currentPath();
@@ -26,7 +31,7 @@ void dust_sensor::createFile() const
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QTextStream out(&file);
         out << "ID: " << getID() << "\n";
-        out << "Type: Dust Sensor\n";
+        out << "Type: " << "Dust Sensor" << "\n";
         out << "Name: " << QString::fromStdString(getName()) << "\n";
         out << "Precision: " << getPrecision() << "\n";
     }

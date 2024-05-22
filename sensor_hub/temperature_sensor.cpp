@@ -17,6 +17,11 @@ temperature_sensor* temperature_sensor::clone() const
     return new temperature_sensor(*this);
 }
 
+void temperature_sensor::setTemperature(double level)
+{
+    temperature = level;
+}
+
 void temperature_sensor::createFile() const
 {
     QString currentPath = QDir::currentPath();
@@ -26,7 +31,7 @@ void temperature_sensor::createFile() const
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QTextStream out(&file);
         out << "ID: " << getID() << "\n";
-        out << "Type: Temperature Sensor\n";
+        out << "Type: " << "Temperature Sensor" << "\n";
         out << "Name: " << QString::fromStdString(getName()) << "\n";
         out << "Precision: " << getPrecision() << "\n";
     }

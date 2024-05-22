@@ -17,6 +17,7 @@ public:
     double getDustLevel() const;
     double getPrecision() const override;
     dust_sensor* clone() const override;
+    void setDustLevel(double level); // Metodo per aggiornare il livello di polvere
 };
 
 #endif // DUST_SENSOR_H

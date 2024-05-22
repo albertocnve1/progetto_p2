@@ -17,6 +17,11 @@ humidity_sensor* humidity_sensor::clone() const
     return new humidity_sensor(*this);
 }
 
+void humidity_sensor::setHumidity(double level)
+{
+    humidity = level;
+}
+
 void humidity_sensor::createFile() const
 {
     QString currentPath = QDir::currentPath();
@@ -27,7 +32,7 @@ void humidity_sensor::createFile() const
     {
         QTextStream out(&file);
         out << "ID: " << getID() << "\n";
-        out << "Type: Humidity Sensor\n";
+        out << "Type: " << "Humidity Sensor" << "\n";
         out << "Name: " << QString::fromStdString(getName()) << "\n";
         out << "Precision: " << getPrecision() << "\n";
     }

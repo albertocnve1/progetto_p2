@@ -17,6 +17,7 @@ public:
     double getHumidity() const;
     double getPrecision() const override;
     humidity_sensor* clone() const override;
+    void setHumidity(double level); // Metodo per aggiornare il livello di umidità
 };
 
 #endif // HUMIDITY_SENSOR_H
