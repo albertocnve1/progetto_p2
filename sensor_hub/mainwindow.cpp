@@ -57,8 +57,12 @@ MainWindow::MainWindow(QWidget *parent)
     rightLayout = new QVBoxLayout;
     rightLayout->addWidget(&detailsLabel);
     rightLayout->addWidget(chartView);
-    rightLayout->addWidget(startSimulationButton);
-    rightLayout->addWidget(stopSimulationButton);  // Aggiunta del pulsante per interrompere la simulazione
+
+    QHBoxLayout *simulationButtonsLayout = new QHBoxLayout; // Layout orizzontale per i pulsanti di simulazione
+    simulationButtonsLayout->addWidget(startSimulationButton);
+    simulationButtonsLayout->addWidget(stopSimulationButton);
+
+    rightLayout->addLayout(simulationButtonsLayout); // Aggiungi il layout dei pulsanti di simulazione
 
     layout->addLayout(rightLayout);
 
@@ -88,8 +92,8 @@ MainWindow::MainWindow(QWidget *parent)
     // Inizializzazione della simulazione
     sensorSimulation = new SensorSimulation(this);
     connect(sensorSimulation, &SensorSimulation::newSensorData, this, &MainWindow::handleNewSensorData);
-
 }
+
 
 MainWindow::~MainWindow()
 {
@@ -372,24 +376,26 @@ void MainWindow::displaySensorDetails()
 
 QString MainWindow::getAxisLabel(const std::string &sensorType)
 {
-    qDebug() << "Sensor type: " << QString::fromStdString(sensorType);
-    if (sensorType == "temperature_sensor")
+    if (sensorType == "Temperature Sensor")
     {
         return "°C";
     }
-    else if (sensorType == "humidity_sensor")
+    else if (sensorType == "Humidity Sensor")
     {
         return "% umidità nell'aria";
     }
-    else if (sensorType == "dust_sensor")
+    else if (sensorType == "Dust Sensor")
     {
-        return "PM10";
+        return "PM10 (µg/mc)";
     }
     else
     {
         return "";
     }
 }
+
+
+
 
 void MainWindow::startSimulation()
 {
@@ -415,7 +421,8 @@ void MainWindow::startSimulation()
         QValueAxis *axisX = new QValueAxis;
         axisX->setTitleText("Tempo (s)");
         QValueAxis *axisY = new QValueAxis;
-        axisY->setTitleText(getAxisLabel(s->getSensorType()));
+        QString axisYLabel = getAxisLabel(s->getSensorType());
+        axisY->setTitleText(axisYLabel);
         chart->addAxis(axisX, Qt::AlignBottom);
         chart->addAxis(axisY, Qt::AlignLeft);
         series->attachAxis(axisX);
@@ -472,30 +479,39 @@ void MainWindow::handleNewSensorData(int sensorId, double time, double value)
             QValueAxis *axisX = new QValueAxis;
             axisX->setTitleText("Tempo (s)");
             QValueAxis *axisY = new QValueAxis;
-            axisY->setTitleText(getAxisLabel(s->getSensorType()));
+            QString axisYLabel = getAxisLabel(s->getSensorType());
+            axisY->setTitleText(axisYLabel);
 
             chart->addAxis(axisX, Qt::AlignBottom);
             chart->addAxis(axisY, Qt::AlignLeft);
             series->attachAxis(axisX);
             series->attachAxis(axisY);
+
+            // Imposta i limiti dell'asse Y in base al tipo di sensore
+            std::string sensorType = s->getSensorType();
+            if (sensorType == "Temperature Sensor") {
+                axisY->setRange(-20, 100);
+            } else if (sensorType == "Humidity Sensor") {
+                axisY->setRange(0, 100);
+            } else if (sensorType == "Dust Sensor") {
+                axisY->setRange(0, 50);
+            }
+
             chartView->setChart(chart);
         }
 
         series->append(time, value);
 
-        // Debug: stampa dei valori aggiunti alla serie
-        qDebug() << "Added point (" << time << ", " << value << ") to series";
-
-        // Aggiorna gli intervalli degli assi per assicurare che i dati siano visibili
+        // Aggiorna gli intervalli dell'asse X per assicurare che i dati siano visibili
         QValueAxis *axisX = qobject_cast<QValueAxis *>(chart->axisX(series));
-        QValueAxis *axisY = qobject_cast<QValueAxis *>(chart->axisY(series));
-
         if (axisX) {
             axisX->setRange(qMax(0.0, time - 10), time + 10);
         }
+
+        // Aggiorna il titolo dell'asse Y
+        QValueAxis *axisY = qobject_cast<QValueAxis *>(chart->axisY(series));
         if (axisY) {
-            axisY->setRange(0, 10); // Imposta un intervallo fisso per visualizzare i valori generati
-            axisY->setTitleText(getAxisLabel(s->getSensorType())); // Assicurati che il titolo sia aggiornato
+            axisY->setTitleText(getAxisLabel(s->getSensorType()));
         }
     }
     else
@@ -503,3 +519,6 @@ void MainWindow::handleNewSensorData(int sensorId, double time, double value)
         QMessageBox::warning(this, tr("Errore"), tr("Sensore non trovato"));
     }
 }
+
+
+

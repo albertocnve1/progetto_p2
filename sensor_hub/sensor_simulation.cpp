@@ -31,8 +31,5 @@ void SensorSimulation::generateSensorData()
         double value = QRandomGenerator::global()->bounded(10.0);
         qint64 timestamp = QDateTime::currentMSecsSinceEpoch();
         emit newSensorData(currentSensorId, (timestamp - startTime) / 1000.0, value);  // Usa il tempo relativo
-
-        // Debug: stampa del valore generato
-        qDebug() << "Generated value for sensor " << currentSensorId << ": " << value;
     }
 }
