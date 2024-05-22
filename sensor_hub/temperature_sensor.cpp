@@ -30,16 +30,14 @@ void temperature_sensor::createFile() const
     QDir dir;
     dir.mkdir(currentPath + "/sensors_list");
     QFile file(currentPath + "/sensors_list/" + QString::number(getID()) + ".txt");
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append)) // Cambiato in Append
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) // Cambiato in WriteOnly
     {
         QTextStream out(&file);
-        if (file.size() == 0) { // Scrive l'intestazione solo se il file è vuoto
-            out << "ID: " << getID() << "\n";
-            out << "Type: " << "Temperature Sensor" << "\n";
-            out << "Name: " << QString::fromStdString(getName()) << "\n";
-            out << "Precision: " << getPrecision() << "\n";
-            out << "Chart Data:\n";
-        }
+        out << "ID: " << getID() << "\n";
+        out << "Type: " << "Temperature Sensor" << "\n";
+        out << "Name: " << QString::fromStdString(getName()) << "\n";
+        out << "Precision: " << getPrecision() << "\n";
+        out << "Chart Data:\n";
 
         for (const auto& point : chartData)
         {
@@ -47,7 +45,6 @@ void temperature_sensor::createFile() const
         }
     }
 }
-
 
 void temperature_sensor::addChartData(double time, double value) {
     chartData.emplace_back(time, value);

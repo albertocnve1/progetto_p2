@@ -517,7 +517,7 @@ void MainWindow::startSimulation()
     {
         sensor *s = it->second;
 
-        // Pulisci i dati del grafico esistenti
+        // Cancella i dati del grafico precedente
         s->clearChartData();
 
         QChart *chart = new QChart();
