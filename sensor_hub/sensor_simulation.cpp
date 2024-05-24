@@ -29,7 +29,6 @@ void SensorSimulation::simulateSensor(unsigned int sensorId)
     }
 }
 
-
 void SensorSimulation::stopSimulation()
 {
     simulationTimer->stop();  // Ferma il timer della simulazione
@@ -47,35 +46,30 @@ void SensorSimulation::generateSensorData()
         {
             value = QRandomGenerator::global()->bounded(50.0);
             dynamic_cast<dust_sensor *>(s)->setDustLevel(value);
-            dynamic_cast<dust_sensor *>(s)->addChartData((QDateTime::currentMSecsSinceEpoch() - startTime) / 1000.0, value);
         }
         else if (dynamic_cast<temperature_sensor *>(s))
         {
             value = QRandomGenerator::global()->bounded(120.0) - 20.0;
             dynamic_cast<temperature_sensor *>(s)->setTemperature(value);
-            dynamic_cast<temperature_sensor *>(s)->addChartData((QDateTime::currentMSecsSinceEpoch() - startTime) / 1000.0, value);
         }
         else if (dynamic_cast<humidity_sensor *>(s))
         {
             value = QRandomGenerator::global()->bounded(100.0);
             dynamic_cast<humidity_sensor *>(s)->setHumidity(value);
-            dynamic_cast<humidity_sensor *>(s)->addChartData((QDateTime::currentMSecsSinceEpoch() - startTime) / 1000.0, value);
         }
 
         // Limita il valore a due cifre decimali
         value = QString::number(value, 'f', 2).toDouble();
 
         qint64 timestamp = QDateTime::currentMSecsSinceEpoch();
-        emit newSensorData(currentSensorId, (timestamp - startTime) / 1000.0, value);  // Usa il tempo relativo
+        double relativeTime = (timestamp - startTime) / 1000.0;
+
+        // Usa il nuovo metodo updateSensorData
+        s->updateSensorData(relativeTime, value);
+
+        emit newSensorData(currentSensorId, relativeTime, value);  // Usa il tempo relativo
 
         // Debug: stampa del valore generato
         qDebug() << "Generated value for sensor " << currentSensorId << ": " << value;
-
-        // Scrivi i nuovi dati nel file del sensore
-        s->createFile();
     }
 }
-
-
-
-

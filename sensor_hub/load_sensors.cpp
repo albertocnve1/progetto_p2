@@ -42,45 +42,19 @@ void loadSensors() {
                 {
                     precision = parts[1].toDouble();
                 }
-                else if (parts[0] == "Chart Data")
-                {
-                    while (!in.atEnd())
-                    {
-                        QString dataLine = in.readLine();
-                        QStringList dataParts = dataLine.split(",");
-                        if (dataParts.size() == 2)
-                        {
-                            double time = dataParts[0].toDouble();
-                            double value = dataParts[1].toDouble();
-                            chartData.emplace_back(time, value);
-                        }
-                    }
-                }
             }
 
             if (type == "Dust Sensor")
             {
                 dust_sensor* sensor = dust_sensor::create(name, id, precision);
-                for (const auto& data : chartData)
-                {
-                    sensor->addChartData(data.first, data.second);
-                }
             }
             else if (type == "Temperature Sensor")
             {
                 temperature_sensor* sensor = temperature_sensor::create(name, id, precision);
-                for (const auto& data : chartData)
-                {
-                    sensor->addChartData(data.first, data.second);
-                }
             }
             else if (type == "Humidity Sensor")
             {
                 humidity_sensor* sensor = humidity_sensor::create(name, id, precision);
-                for (const auto& data : chartData)
-                {
-                    sensor->addChartData(data.first, data.second);
-                }
             }
         }
     }

@@ -1,5 +1,4 @@
 #include "humidity_sensor.h"
-
 #include <QDir>
 #include <QFile>
 #include <QTextStream>
@@ -30,7 +29,14 @@ void humidity_sensor::createFile() const
     QDir dir;
     dir.mkdir(currentPath + "/sensors_list");
     QFile file(currentPath + "/sensors_list/" + QString::number(getID()) + ".txt");
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) // Cambiato in WriteOnly
+
+    // Controlla se il file esiste già
+    if (file.exists())
+    {
+        return;  // Esce dalla funzione se il file esiste già
+    }
+
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         QTextStream out(&file);
         out << "ID: " << getID() << "\n";
@@ -39,23 +45,11 @@ void humidity_sensor::createFile() const
         out << "Precision: " << getPrecision() << "\n";
         out << "Chart Data:\n";
 
-        for (const auto& point : chartData)
+        for (const auto& point : getChartData())
         {
             out << point.first << "," << point.second << "\n";
         }
     }
-}
-
-void humidity_sensor::addChartData(double time, double value) {
-    chartData.emplace_back(time, value);
-}
-
-std::vector<std::pair<double, double>> humidity_sensor::getChartData() const {
-    return chartData;
-}
-
-void humidity_sensor::clearChartData() {
-    chartData.clear();
 }
 
 humidity_sensor::humidity_sensor(std::string name, double p) : sensor(name), precision(p) {}

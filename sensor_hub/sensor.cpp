@@ -1,6 +1,7 @@
 #include "sensor.h"
 #include <QDir>
 #include <QFile>
+#include <QTextStream>
 
 unsigned int sensor::nextID = 0;
 std::unordered_map<unsigned int, sensor *> sensor::sensors;
@@ -60,3 +61,51 @@ std::unordered_map<unsigned int, sensor *> &sensor::getSensors()
 {
     return sensors;
 }
+
+void sensor::updateSensorData(double time, double value) const
+{
+    const_cast<sensor*>(this)->addChartData(time, value);
+    QString currentPath = QDir::currentPath();
+    QFile file(currentPath + "/sensors_list/" + QString::number(getID()) + ".txt");
+    if (file.open(QIODevice::Append | QIODevice::Text)) // Usa Append invece di WriteOnly
+    {
+        QTextStream out(&file);
+        out << time << "," << value << "\n";
+    }
+}
+
+void sensor::addChartData(double time, double value)
+{
+    chartData.emplace_back(time, value);
+}
+
+std::vector<std::pair<double, double>> sensor::getChartData() const
+{
+    return chartData;
+}
+
+void sensor::clearChartData()
+{
+    chartData.clear();
+    QString currentPath = QDir::currentPath();
+    QFile file(currentPath + "/sensors_list/" + QString::number(getID()) + ".txt");
+
+    if (file.open(QIODevice::ReadWrite | QIODevice::Text))
+    {
+        QTextStream in(&file);
+        QStringList lines;
+        while (!in.atEnd()) {
+            QString line = in.readLine();
+            if (line.startsWith("Chart Data:")) {
+                break;
+            }
+            lines.append(line);
+        }
+        file.resize(0); // Pulisce il contenuto del file
+        for (const QString& line : lines) {
+            in << line << "\n";
+        }
+        in << "Chart Data:\n"; // Aggiunge l'intestazione per i dati del grafico
+    }
+}
+
