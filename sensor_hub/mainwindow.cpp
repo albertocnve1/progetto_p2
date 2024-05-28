@@ -17,6 +17,9 @@
 #include <QtCharts/QChart>
 #include <QtCharts/QValueAxis>
 #include <unordered_map>
+#include <QLabel>
+#include <QListWidgetItem>
+#include <QIcon>
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent), layout(new QHBoxLayout(this)), detailsLabel(""), chartView(new QChartView), startSimulationButton(new QPushButton("Avvia nuova simulazione")), stopSimulationButton(new QPushButton("Interrompi Simulazione"))
@@ -75,6 +78,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     layout->addLayout(rightLayout);
 
+    // Imposta una dimensione dell'icona personalizzata
+    listWidget.setIconSize(QSize(48, 48)); // Imposta la dimensione desiderata delle icone
+
     // Connetti la casella di ricerca al filtro
     connect(&searchBox, &QLineEdit::textChanged, this, &MainWindow::filterSensors);
 
@@ -98,14 +104,32 @@ MainWindow::MainWindow(QWidget *parent)
     {
         sensor *s = pair.second;
         QString sensorInfo = QString::number(s->getID()) + ": " + QString::fromStdString(s->getName());
-        listWidget.addItem(sensorInfo);
+        QListWidgetItem *item = new QListWidgetItem(sensorInfo);
+
+        // Aggiungi l'immagine in base al tipo di sensore
+        QString imagePath = ":/assets/default.png"; // Percorso predefinito
+
+        if (dynamic_cast<dust_sensor *>(s))
+        {
+            imagePath = ":/assets/dust_sensor_icon.png";
+        }
+        else if (dynamic_cast<temperature_sensor *>(s))
+        {
+            imagePath = ":/assets/temperature_sensor_icon.png";
+        }
+        else if (dynamic_cast<humidity_sensor *>(s))
+        {
+            imagePath = ":/assets/humidity_sensor_icon.png";
+        }
+
+        item->setIcon(QIcon(imagePath));
+        listWidget.addItem(item);
     }
 
     // Impostazione delle proporzioni dei widget
     this->layout->setStretchFactor(leftLayout, 1);
     this->layout->setStretchFactor(rightLayout, 3);
 }
-
 
 MainWindow::~MainWindow()
 {
