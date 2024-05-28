@@ -18,6 +18,7 @@ SOURCES += \
     sensor_data_handler.cpp \
     sensor_operations.cpp \
     sensor_simulation.cpp \
+    sensor_simulation_manager.cpp \
     sensordialog.cpp \
     temperature_sensor.cpp
 
@@ -30,6 +31,7 @@ HEADERS += \
     sensor_data_handler.h \
     sensor_operations.h \
     sensor_simulation.h \
+    sensor_simulation_manager.h \
     sensordialog.h \
     temperature_sensor.h
 

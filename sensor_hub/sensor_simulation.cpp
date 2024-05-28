@@ -69,7 +69,5 @@ void SensorSimulation::generateSensorData()
 
         emit newSensorData(currentSensorId, relativeTime, value);  // Usa il tempo relativo
 
-        // Debug: stampa del valore generato
-        qDebug() << "Generated value for sensor " << currentSensorId << ": " << value;
     }
 }

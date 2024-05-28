@@ -14,7 +14,8 @@
 #include "sensor_simulation.h"
 #include "load_sensors.h"
 #include "sensor_operations.h"
-#include "sensor_data_handler.h" // Aggiungi questa linea
+#include "sensor_data_handler.h"
+#include "sensor_simulation_manager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,13 +31,7 @@ public:
 
 private slots:
     void filterSensors(const QString &text);
-    void addSensor();
-    void newSensor();
-    void deleteSensor();
     void showContextMenu(const QPoint &);
-    void displaySensorDetails();
-    void startSimulation();
-    void stopSimulation();
     void handleNewSensorData(int sensorId, double time, double value);
 
 private:
@@ -53,6 +48,7 @@ private:
     SensorSimulation *sensorSimulation;
     QString getAxisLabel(const std::string &sensorType);
     QLabel currentValueLabel;
+    SensorSimulationManager *sensorSimulationManager; // Dichiarazione del gestore della simulazione
 
 };
 
