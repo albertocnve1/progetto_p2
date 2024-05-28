@@ -31,7 +31,7 @@ void SensorSimulation::simulateSensor(unsigned int sensorId)
 
 void SensorSimulation::stopSimulation()
 {
-    simulationTimer->stop();  // Ferma il timer della simulazione
+    simulationTimer->stop();
 }
 
 void SensorSimulation::generateSensorData()

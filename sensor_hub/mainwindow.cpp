@@ -3,6 +3,7 @@
 #include "temperature_sensor.h"
 #include "humidity_sensor.h"
 #include "sensordialog.h"
+#include "sensor_operations.h" // Aggiungi questa linea
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QMenu>
@@ -14,6 +15,7 @@
 #include <QtCharts/QChart>
 #include <QtCharts/QValueAxis>
 #include <unordered_map>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent), layout(new QHBoxLayout(this)), detailsLabel(""), chartView(new QChartView), startSimulationButton(new QPushButton("Avvia nuova simulazione")), stopSimulationButton(new QPushButton("Interrompi Simulazione"))
@@ -291,89 +293,18 @@ void MainWindow::showContextMenu(const QPoint &pos)
     QMenu contextMenu(tr("Context menu"), this);
 
     QAction actionEdit("Modifica", this);
-    connect(&actionEdit, &QAction::triggered, this, &MainWindow::editSensor);
+    connect(&actionEdit, &QAction::triggered, this, [this]() {
+        SensorOperations::editSensor(&listWidget, this);
+    });
     contextMenu.addAction(&actionEdit);
 
     QAction actionExport("Esporta", this);
-    connect(&actionExport, &QAction::triggered, this, &MainWindow::exportSensor);
+    connect(&actionExport, &QAction::triggered, this, [this]() {
+        SensorOperations::exportSensor(&listWidget, this);
+    });
     contextMenu.addAction(&actionExport);
 
     contextMenu.exec(listWidget.mapToGlobal(pos));
-}
-
-void MainWindow::editSensor()
-{
-    QListWidgetItem *selectedItem = listWidget.currentItem();
-    if (!selectedItem)
-    {
-        QMessageBox::warning(this, tr("Errore"), tr("Nessun sensore selezionato"));
-        return;
-    }
-
-    QString itemText = selectedItem->text();
-    unsigned int id = itemText.split(":")[0].toUInt();
-
-    std::unordered_map<unsigned int, sensor *> &sensors = sensor::getSensors();
-    auto it = sensors.find(id);
-    if (it == sensors.end())
-    {
-        QMessageBox::warning(this, tr("Errore"), tr("Sensore non trovato"));
-        return;
-    }
-
-    sensor *sensorToEdit = it->second;
-
-    bool ok;
-    QString text = QInputDialog::getText(this, tr("Modifica nome"),
-                                         tr("Inserisci il nuovo nome:"), QLineEdit::Normal,
-                                         QString::fromStdString(sensorToEdit->getName()), &ok);
-    if (ok && !text.isEmpty())
-    {
-        sensorToEdit->setName(text.toStdString());
-
-        selectedItem->setText(QString::number(sensorToEdit->getID()) + ": " + text);
-    }
-}
-
-void MainWindow::exportSensor()
-{
-    QListWidgetItem *selectedItem = listWidget.currentItem();
-    if (!selectedItem)
-    {
-        QMessageBox::warning(this, tr("Errore"), tr("Nessun sensore selezionato"));
-        return;
-    }
-
-    QString itemText = selectedItem->text();
-    unsigned int id = itemText.split(":")[0].toUInt();
-
-    std::unordered_map<unsigned int, sensor *> &sensors = sensor::getSensors();
-    auto it = sensors.find(id);
-    if (it == sensors.end())
-    {
-        QMessageBox::warning(this, tr("Errore"), tr("Sensore non trovato"));
-        return;
-    }
-
-    QString folderPath = QFileDialog::getExistingDirectory(this, tr("Seleziona cartella"));
-    if (folderPath.isEmpty())
-    {
-        return;
-    }
-
-    QString currentPath = QDir::currentPath();
-    QString sourceFilePath = currentPath + "/sensors_list/" + QString::number(id) + ".txt";
-    QString destinationFilePath = folderPath + "/" + QString::number(id) + ".txt";
-
-    if (QFile::exists(sourceFilePath))
-    {
-        QFile::copy(sourceFilePath, destinationFilePath);
-        QMessageBox::information(this, tr("Esportazione riuscita"), tr("File del sensore esportato con successo"));
-    }
-    else
-    {
-        QMessageBox::warning(this, tr("Errore"), tr("File del sensore non trovato"));
-    }
 }
 
 void MainWindow::displaySensorDetails()
@@ -498,12 +429,6 @@ void MainWindow::displaySensorDetails()
 }
 
 
-
-
-
-
-
-
 void MainWindow::startSimulation()
 {
     QListWidgetItem *selectedItem = listWidget.currentItem();
@@ -570,131 +495,15 @@ void MainWindow::startSimulation()
 }
 
 
-
-
-
 void MainWindow::stopSimulation()
 {
     sensorSimulation->stopSimulation();
 }
 
+
 void MainWindow::handleNewSensorData(int sensorId, double time, double value)
 {
-    std::unordered_map<unsigned int, sensor *> &sensors = sensor::getSensors();
-    auto it = sensors.find(sensorId);
-    if (it != sensors.end())
-    {
-        sensor *s = it->second;
-
-        // Aggiorna il valore della misurazione attuale
-        if (dynamic_cast<dust_sensor *>(s))
-        {
-            dynamic_cast<dust_sensor *>(s)->setDustLevel(value);
-            currentValueLabel.setText(QString("Livello PM10 attuale: %1 μg/m³").arg(value));
-        }
-        else if (dynamic_cast<temperature_sensor *>(s))
-        {
-            dynamic_cast<temperature_sensor *>(s)->setTemperature(value);
-            currentValueLabel.setText(QString("Temperatura attuale: %1 °C").arg(value));
-        }
-        else if (dynamic_cast<humidity_sensor *>(s))
-        {
-            dynamic_cast<humidity_sensor *>(s)->setHumidity(value);
-            currentValueLabel.setText(QString("Livello umidità attuale: %1 %").arg(value));
-        }
-
-        QLineSeries *series;
-        QChart *chart = chartView->chart();
-        if (chart && chart->series().size() > 0)
-        {
-            series = qobject_cast<QLineSeries *>(chart->series().at(0));
-        }
-        else
-        {
-            series = new QLineSeries();
-            chart = new QChart();
-            chart->addSeries(series);
-            chart->setTitle("Simulazione del sensore " + QString::fromStdString(s->getName()));
-
-            QValueAxis *axisX = new QValueAxis;
-            axisX->setTitleText("Tempo (s)");
-            QValueAxis *axisY = new QValueAxis;
-
-            // Usare dynamic_cast per determinare il tipo di sensore e impostare i limiti dell'asse Y
-            if (dynamic_cast<dust_sensor *>(s))
-            {
-                axisY->setRange(0, 50);
-                axisY->setTitleText("PM10 (µg/m³)");
-            }
-            else if (dynamic_cast<temperature_sensor *>(s))
-            {
-                axisY->setRange(-20, 100);
-                axisY->setTitleText("°C");
-            }
-            else if (dynamic_cast<humidity_sensor *>(s))
-            {
-                axisY->setRange(0, 100);
-                axisY->setTitleText("% umidità nell'aria");
-            }
-
-            chart->addAxis(axisX, Qt::AlignBottom);
-            chart->addAxis(axisY, Qt::AlignLeft);
-            series->attachAxis(axisX);
-            series->attachAxis(axisY);
-
-            chart->legend()->hide(); // Nascondere la leggenda
-
-            // Imposta un intervallo iniziale di 20 secondi per l'asse X
-            axisX->setRange(0, 20);
-
-            chartView->setChart(chart);
-        }
-
-        series->append(time, value);
-
-        // Aggiorna gli intervalli dell'asse X per assicurare che i dati siano visibili
-        QList<QAbstractAxis*> axesX = chart->axes(Qt::Horizontal, series);
-        if (!axesX.isEmpty()) {
-            QValueAxis *axisX = qobject_cast<QValueAxis *>(axesX.first());
-            if (axisX) {
-                double currentMax = axisX->max();
-                if (time > currentMax) {
-                    axisX->setRange(0, currentMax * 2); // Raddoppia l'intervallo dell'asse X
-                }
-            }
-        }
-
-        // Aggiorna il titolo dell'asse Y
-        QList<QAbstractAxis*> axesY = chart->axes(Qt::Vertical, series);
-        if (!axesY.isEmpty()) {
-            QValueAxis *axisY = qobject_cast<QValueAxis *>(axesY.first());
-            if (axisY) {
-                // Usare dynamic_cast per determinare il tipo di sensore e impostare il titolo dell'asse Y
-                if (dynamic_cast<dust_sensor *>(s))
-                {
-                    axisY->setTitleText("PM10 (µg/m³)");
-                }
-                else if (dynamic_cast<temperature_sensor *>(s))
-                {
-                    axisY->setTitleText("°C");
-                }
-                else if (dynamic_cast<humidity_sensor *>(s))
-                {
-                    axisY->setTitleText("% umidità nell'aria");
-                }
-            }
-        }
-
-        // Nascondi la leggenda ogni volta che il grafico viene aggiornato
-        if (chart)
-        {
-            chart->legend()->hide();
-        }
-    }
-    else
-    {
-        QMessageBox::warning(this, tr("Errore"), tr("Sensore non trovato"));
-    }
+    SensorDataHandler::handleNewSensorData(sensorId, time, value, chartView, &currentValueLabel, this);
 }
 
 

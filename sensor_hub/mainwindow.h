@@ -13,6 +13,8 @@
 #include <QLineSeries>
 #include "sensor_simulation.h"
 #include "load_sensors.h"
+#include "sensor_operations.h"
+#include "sensor_data_handler.h" // Aggiungi questa linea
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -32,11 +34,9 @@ private slots:
     void newSensor();
     void deleteSensor();
     void showContextMenu(const QPoint &);
-    void editSensor();
-    void exportSensor();
     void displaySensorDetails();
     void startSimulation();
-    void stopSimulation();  // Dichiarazione dello slot per interrompere la simulazione
+    void stopSimulation();
     void handleNewSensorData(int sensorId, double time, double value);
 
 private:
@@ -48,11 +48,11 @@ private:
     QPushButton *removeButton;
     QChartView *chartView;
     QPushButton *startSimulationButton;
-    QPushButton *stopSimulationButton;  // Dichiarazione del pulsante per interrompere la simulazione
+    QPushButton *stopSimulationButton;
     QVBoxLayout *rightLayout;
     SensorSimulation *sensorSimulation;
     QString getAxisLabel(const std::string &sensorType);
-    QLabel currentValueLabel; // Nuovo QLabel per il valore della misurazione attuale
+    QLabel currentValueLabel;
 
 };
 
