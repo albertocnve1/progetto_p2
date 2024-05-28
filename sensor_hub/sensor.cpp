@@ -2,6 +2,7 @@
 #include <QDir>
 #include <QFile>
 #include <QTextStream>
+#include <QDebug>
 
 unsigned int sensor::nextID = 0;
 std::unordered_map<unsigned int, sensor *> sensor::sensors;
@@ -64,7 +65,7 @@ std::unordered_map<unsigned int, sensor *> &sensor::getSensors()
 
 void sensor::updateSensorData(double time, double value) const
 {
-    const_cast<sensor*>(this)->addChartData(time, value);
+    const_cast<sensor*>(this)->addChartData(time, value); // Rimuovi const per aggiornare i dati
     QString currentPath = QDir::currentPath();
     QFile file(currentPath + "/sensors_list/" + QString::number(getID()) + ".txt");
     if (file.open(QIODevice::Append | QIODevice::Text)) // Usa Append invece di WriteOnly
@@ -76,6 +77,7 @@ void sensor::updateSensorData(double time, double value) const
 
 void sensor::addChartData(double time, double value)
 {
+    qDebug() << "Aggiunta dati al grafico: tempo =" << time << ", valore =" << value;
     chartData.emplace_back(time, value);
 }
 
@@ -87,6 +89,7 @@ std::vector<std::pair<double, double>> sensor::getChartData() const
 void sensor::clearChartData()
 {
     chartData.clear();
+
     QString currentPath = QDir::currentPath();
     QFile file(currentPath + "/sensors_list/" + QString::number(getID()) + ".txt");
 
@@ -108,4 +111,3 @@ void sensor::clearChartData()
         in << "Chart Data:\n"; // Aggiunge l'intestazione per i dati del grafico
     }
 }
-

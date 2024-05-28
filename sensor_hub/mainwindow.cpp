@@ -3,14 +3,12 @@
 #include "temperature_sensor.h"
 #include "humidity_sensor.h"
 #include "sensordialog.h"
-
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QMenu>
 #include <QInputDialog>
 #include <QRandomGenerator>
 #include <QTime>
-
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QChart>
@@ -66,7 +64,6 @@ MainWindow::MainWindow(QWidget *parent)
     rightLayout->addLayout(simulationButtonsLayout); // Aggiungi il layout dei pulsanti di simulazione
 
     layout->addLayout(rightLayout);
-
 
     connect(startSimulationButton, &QPushButton::clicked, this, &MainWindow::startSimulation);
     connect(stopSimulationButton, &QPushButton::clicked, this, &MainWindow::stopSimulation);  // Connessione del pulsante allo slot
@@ -206,6 +203,7 @@ void MainWindow::addSensor()
         }
     }
 }
+
 
 
 
@@ -402,6 +400,9 @@ void MainWindow::displaySensorDetails()
         QChart *chart = new QChart();
         QLineSeries *series = new QLineSeries();
 
+        qDebug() << "Sensor type:" << QString::fromStdString(s->getName());
+        qDebug() << "Chart Data:" << s->getChartData().size();
+
         // Usare dynamic_cast per determinare il tipo di sensore e impostare i limiti dell'asse Y
         if (dynamic_cast<dust_sensor *>(s))
         {
@@ -501,6 +502,8 @@ void MainWindow::displaySensorDetails()
 
 
 
+
+
 void MainWindow::startSimulation()
 {
     QListWidgetItem *selectedItem = listWidget.currentItem();
@@ -516,7 +519,6 @@ void MainWindow::startSimulation()
     if (it != sensors.end())
     {
         sensor *s = it->second;
-
 
         // Cancella i dati del grafico precedente sia dal grafico che dal file
         s->clearChartData();

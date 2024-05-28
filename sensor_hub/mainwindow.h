@@ -12,6 +12,7 @@
 #include <QChartView>
 #include <QLineSeries>
 #include "sensor_simulation.h"
+#include "load_sensors.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

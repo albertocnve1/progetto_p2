@@ -29,9 +29,9 @@ public:
     virtual double getPrecision() const = 0;
     static std::unordered_map<unsigned int, sensor*>& getSensors();
 
-    virtual void addChartData(double, double); // Implementazione generale nella classe base
-    virtual std::vector<std::pair<double, double>> getChartData() const; // Implementazione generale nella classe base
-    virtual void clearChartData(); // Implementazione generale nella classe base
+    void addChartData(double, double); // Rimuovi const
+    std::vector<std::pair<double, double>> getChartData() const;
+    void clearChartData();
 
     // Nuovo metodo per aggiornare i dati del sensore
     void updateSensorData(double, double) const;
