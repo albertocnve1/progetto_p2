@@ -25,7 +25,7 @@ void SensorSimulation::simulateSensor(unsigned int sensorId)
         } else if (dynamic_cast<humidity_sensor*>(s)) {
             dynamic_cast<humidity_sensor*>(s)->clearChartData();
         }
-        simulationTimer->start(1000); // Genera dati ogni secondo
+        simulationTimer->start(500); // Genera dati ogni secondo
     }
 }
 

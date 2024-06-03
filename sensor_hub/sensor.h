@@ -36,6 +36,9 @@ public:
 
     // Nuovo metodo per aggiornare i dati del sensore
     void updateSensorData(double, double) const;
+
+    void loadChartDataFromFile(); // Dichiarazione della funzione
+
 };
 
 #endif // SENSOR_H

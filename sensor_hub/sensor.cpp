@@ -17,6 +17,8 @@ sensor::sensor(std::string name) : sensorName(name)
     sensorID = nextID;
     sensors[sensorID] = this;
     ++nextID;
+
+    loadChartDataFromFile(); // Carica i dati del grafico dal file
 }
 
 sensor::sensor(std::string name, unsigned int ID)
@@ -28,6 +30,8 @@ sensor::sensor(std::string name, unsigned int ID)
     sensorID = ID;
     sensorName = name;
     sensors[ID] = this;
+
+    loadChartDataFromFile(); // Carica i dati del grafico dal file
 }
 
 sensor::~sensor()
@@ -141,3 +145,36 @@ void sensor::updateFile(std::string newName)
         }
     }
 }
+
+void sensor::loadChartDataFromFile()
+{
+    QString currentPath = QDir::currentPath();
+    QFile file(currentPath + "/sensors_list/" + QString::number(getID()) + ".txt");
+
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QTextStream in(&file);
+        bool chartDataSection = false;
+        while (!in.atEnd())
+        {
+            QString line = in.readLine();
+            if (line.startsWith("Chart Data:"))
+            {
+                chartDataSection = true;
+                continue;
+            }
+
+            if (chartDataSection)
+            {
+                QStringList parts = line.split(",");
+                if (parts.size() == 2)
+                {
+                    double time = parts[0].toDouble();
+                    double value = parts[1].toDouble();
+                    chartData.emplace_back(time, value);
+                }
+            }
+        }
+    }
+}
+
