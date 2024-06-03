@@ -11,6 +11,9 @@ SensorSimulationManager::SensorSimulationManager(QChartView *chartView, QLabel *
 {
     sensorSimulation = new SensorSimulation(this);
     connect(sensorSimulation, &SensorSimulation::newSensorData, this, [this](int sensorId, double time, double value) {
+        Q_UNUSED(sensorId);
+        Q_UNUSED(time);
+        Q_UNUSED(value);
         displaySensorDetails();
     });
 }
