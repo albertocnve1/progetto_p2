@@ -30,7 +30,13 @@ void humidity_sensor::createFile() const
     dir.mkdir(currentPath + "/sensors_list");
     QFile file(currentPath + "/sensors_list/" + QString::number(getID()) + ".txt");
 
-    // Apre il file in modalità scrittura (sovrascrive se esiste)
+    // Check if the file already exists
+    if (file.exists())
+    {
+        return; // File already exists, do not overwrite
+    }
+
+    // Open the file in write mode (overwrite if exists)
     if (file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         QTextStream out(&file);
@@ -48,6 +54,7 @@ void humidity_sensor::createFile() const
         file.close();
     }
 }
+
 humidity_sensor::humidity_sensor(std::string name, double p) : sensor(name), precision(p) {}
 humidity_sensor::humidity_sensor(std::string name, unsigned int ID, double p) : sensor(name, ID), precision(p) {}
 
