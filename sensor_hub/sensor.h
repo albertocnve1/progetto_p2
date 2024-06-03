@@ -27,6 +27,7 @@ public:
     unsigned int getID() const;
     std::string getName() const;
     virtual double getPrecision() const = 0;
+    void updateFile(std::string newName);
     static std::unordered_map<unsigned int, sensor*>& getSensors();
 
     void addChartData(double, double); // Rimuovi const
