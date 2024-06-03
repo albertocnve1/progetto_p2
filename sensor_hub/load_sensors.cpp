@@ -3,7 +3,6 @@
 #include "temperature_sensor.h"
 #include "humidity_sensor.h"
 #include <QDir>
-#include <QDebug>
 
 void loadSensors() {
     QString currentPath = QDir::currentPath();
@@ -21,12 +20,9 @@ void loadSensors() {
             double precision = 0.0;
             std::vector<std::pair<double, double>> chartData;
 
-            qDebug() << "Reading file:" << filename;
-
             while (!in.atEnd())
             {
                 QString line = in.readLine().trimmed();
-                qDebug() << "Line read:" << line;
                 QStringList parts = line.split(": ");
                 if (parts[0] == "ID")
                 {
@@ -46,14 +42,11 @@ void loadSensors() {
                 }
                 else if (parts[0] == "Chart Data")
                 {
-                    qDebug() << "Inizio lettura dati del grafico per il sensore:" << QString::fromStdString(name);
                     while (!in.atEnd())
                     {
                         QString dataLine = in.readLine().trimmed();
-                        qDebug() << "Data line read:" << dataLine;
                         if (dataLine.isEmpty()) continue; // Ignora righe vuote
                         QStringList dataParts = dataLine.split(",");
-                        qDebug() << "Parsing chart data line:" << dataLine;
                         if (dataParts.size() == 2)
                         {
                             bool timeOk, valueOk;
@@ -61,18 +54,11 @@ void loadSensors() {
                             double value = dataParts[1].toDouble(&valueOk);
                             if (timeOk && valueOk) {
                                 chartData.emplace_back(time, value);
-                                qDebug() << "Loaded chart data for sensor" << QString::fromStdString(name) << ": time =" << time << ", value =" << value;
-                            } else {
-                                qDebug() << "Errore nel parsing dei dati del grafico:" << dataLine;
                             }
-                        } else {
-                            qDebug() << "Formato dati del grafico non valido:" << dataLine;
                         }
                     }
                 }
             }
-
-            qDebug() << "Loading Sensor:" << QString::fromStdString(name) << "ID:" << id << "Type:" << QString::fromStdString(type) << "Chart Data Size:" << chartData.size();
 
             if (type == "Dust Sensor")
             {
@@ -81,7 +67,6 @@ void loadSensors() {
                 {
                     sensor->addChartData(data.first, data.second);
                 }
-                qDebug() << "Loaded Dust Sensor:" << QString::fromStdString(name) << "with chart data size:" << sensor->getChartData().size();
             }
             else if (type == "Temperature Sensor")
             {
@@ -90,7 +75,6 @@ void loadSensors() {
                 {
                     sensor->addChartData(data.first, data.second);
                 }
-                qDebug() << "Loaded Temperature Sensor:" << QString::fromStdString(name) << "with chart data size:" << sensor->getChartData().size();
             }
             else if (type == "Humidity Sensor")
             {
@@ -99,12 +83,7 @@ void loadSensors() {
                 {
                     sensor->addChartData(data.first, data.second);
                 }
-                qDebug() << "Loaded Humidity Sensor:" << QString::fromStdString(name) << "with chart data size:" << sensor->getChartData().size();
             }
-        }
-        else
-        {
-            qDebug() << "Failed to open file:" << filename;
         }
     }
 }

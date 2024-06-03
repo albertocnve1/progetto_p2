@@ -2,7 +2,6 @@
 #include <QDir>
 #include <QFile>
 #include <QTextStream>
-#include <QDebug>
 #include <stdexcept>
 
 unsigned int sensor::nextID = 0;
@@ -82,7 +81,6 @@ void sensor::updateSensorData(double time, double value) const
 
 void sensor::addChartData(double time, double value)
 {
-    qDebug() << "Adding chart data: time =" << time << ", value =" << value;
     chartData.emplace_back(time, value);
 }
 

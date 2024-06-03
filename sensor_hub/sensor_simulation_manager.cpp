@@ -42,9 +42,6 @@ void SensorSimulationManager::displaySensorDetails()
         QChart *chart = new QChart();
         QLineSeries *series = new QLineSeries();
 
-        qDebug() << "Sensor type:" << QString::fromStdString(s->getName());
-        qDebug() << "Chart Data:" << s->getChartData().size();
-
         // Usare dynamic_cast per determinare il tipo di sensore e impostare i limiti dell'asse Y
         if (dynamic_cast<dust_sensor *>(s))
         {
