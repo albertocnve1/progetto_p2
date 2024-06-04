@@ -6,7 +6,7 @@
 class humidity_sensor : public sensor
 {
 private:
-    double humidity;
+    double humiditypercentage;
     double precision;
     void createFile() const override;
     humidity_sensor(std::string, double);

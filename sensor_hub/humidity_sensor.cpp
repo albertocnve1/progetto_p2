@@ -53,7 +53,7 @@ humidity_sensor *humidity_sensor::create(std::string name, unsigned int ID, doub
 
 double humidity_sensor::getHumidity() const
 {
-    return humidity;
+    return humiditypercentage;
 }
 
 double humidity_sensor::getPrecision() const
@@ -68,5 +68,5 @@ humidity_sensor *humidity_sensor::clone() const
 
 void humidity_sensor::setHumidity(double level)
 {
-    humidity = level;
+    humiditypercentage = level;
 }
