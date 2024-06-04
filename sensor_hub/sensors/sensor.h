@@ -11,12 +11,13 @@ class sensor
 private:
     unsigned int sensorID;
     std::string sensorName;
+    double precision;
     static unsigned int nextID;
     static std::unordered_map<unsigned int, sensor *> sensors;
 
 protected:
-    sensor(std::string);
-    sensor(std::string, unsigned int);
+    sensor(std::string, double);
+    sensor(std::string, unsigned int, double);
     std::vector<std::pair<double, double>> chartData;
 
 public:
@@ -24,9 +25,9 @@ public:
     virtual ~sensor();
     virtual sensor *clone() const = 0;
     virtual void createFile() const = 0;
-    virtual double getPrecision() const = 0;
     unsigned int getID() const;
     std::string getName() const;
+    double getPrecision() const;
     void setName(std::string);
     void updateFile(std::string);
     void addChartData(double, double);

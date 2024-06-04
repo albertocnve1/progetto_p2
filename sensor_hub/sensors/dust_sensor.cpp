@@ -34,8 +34,8 @@ void dust_sensor::createFile() const
     }
 }
 
-dust_sensor::dust_sensor(std::string name, double p) : sensor(name), precision(p) {}
-dust_sensor::dust_sensor(std::string name, unsigned int ID, double p) : sensor(name, ID), precision(p) {}
+dust_sensor::dust_sensor(std::string name, double p) : sensor(name, p) {}
+dust_sensor::dust_sensor(std::string name, unsigned int ID, double p) : sensor(name, ID, p) {}
 
 dust_sensor *dust_sensor::create(std::string name, double p)
 {
@@ -56,10 +56,6 @@ double dust_sensor::getDustLevel() const
     return dustLevel;
 }
 
-double dust_sensor::getPrecision() const
-{
-    return precision;
-}
 
 dust_sensor *dust_sensor::clone() const
 {

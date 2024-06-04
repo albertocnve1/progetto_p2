@@ -11,9 +11,9 @@
 #include <QPoint>
 #include <QChartView>
 #include <QLineSeries>
-#include "sensor_simulation.h"
-#include "load_sensors.h"
-#include "sensor_operations.h"
+#include "functions/sensor_simulation.h"
+#include "functions/load_sensors.h"
+#include "functions/sensor_operations.h"
 #include "sensor_data_handler.h"
 #include "sensor_simulation_manager.h"
 

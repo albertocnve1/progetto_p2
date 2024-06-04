@@ -34,8 +34,8 @@ void humidity_sensor::createFile() const
     }
 }
 
-humidity_sensor::humidity_sensor(std::string name, double p) : sensor(name), precision(p) {}
-humidity_sensor::humidity_sensor(std::string name, unsigned int ID, double p) : sensor(name, ID), precision(p) {}
+humidity_sensor::humidity_sensor(std::string name, double p) : sensor(name, p) {}
+humidity_sensor::humidity_sensor(std::string name, unsigned int ID, double p) : sensor(name, ID, p) {}
 
 humidity_sensor *humidity_sensor::create(std::string name, double p)
 {
@@ -56,10 +56,6 @@ double humidity_sensor::getHumidity() const
     return humiditypercentage;
 }
 
-double humidity_sensor::getPrecision() const
-{
-    return precision;
-}
 
 humidity_sensor *humidity_sensor::clone() const
 {

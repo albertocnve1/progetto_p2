@@ -1,7 +1,8 @@
 #include "sensor_simulation_manager.h"
-#include "dust_sensor.h"
-#include "temperature_sensor.h"
-#include "humidity_sensor.h"
+#include "sensors/sensor.h"
+#include "sensors/dust_sensor.h"
+#include "sensors/temperature_sensor.h"
+#include "sensors/humidity_sensor.h"
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QValueAxis>
 #include <QDateTime>

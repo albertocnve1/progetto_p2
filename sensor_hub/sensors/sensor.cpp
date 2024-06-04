@@ -7,20 +7,21 @@
 unsigned int sensor::nextID = 0;
 std::unordered_map<unsigned int, sensor *> sensor::sensors;
 
-sensor::sensor(std::string name) : sensorName(name)
+sensor::sensor(std::string name, double p) : sensorName(name)
 {
     while (sensors.find(nextID) != sensors.end())
     {
         ++nextID;
     }
     sensorID = nextID;
+    precision = p;
     sensors[sensorID] = this;
     ++nextID;
 
     loadChartDataFromFile(); // Carica i dati del grafico dal file
 }
 
-sensor::sensor(std::string name, unsigned int ID)
+sensor::sensor(std::string name, unsigned int ID, double p)
 {
     if (sensors.find(ID) != sensors.end())
     {
@@ -28,6 +29,7 @@ sensor::sensor(std::string name, unsigned int ID)
     }
     sensorID = ID;
     sensorName = name;
+    precision = p;
     sensors[ID] = this;
 
     loadChartDataFromFile(); // Carica i dati del grafico dal file
@@ -59,6 +61,11 @@ unsigned int sensor::getID() const
 std::string sensor::getName() const
 {
     return sensorName;
+}
+
+double sensor::getPrecision() const
+{
+    return precision;
 }
 
 void sensor::setName(std::string newName)

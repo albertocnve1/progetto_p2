@@ -6,8 +6,8 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <unordered_map>
-#include "sensor_simulation.h"
-#include "sensor.h"
+#include "functions/sensor_simulation.h"
+#include "sensors/sensor.h"
 
 class SensorSimulationManager : public QObject
 {

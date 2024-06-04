@@ -35,8 +35,8 @@ void temperature_sensor::createFile() const
     }
 }
 
-temperature_sensor::temperature_sensor(std::string name, double p) : sensor(name), precision(p) {}
-temperature_sensor::temperature_sensor(std::string name, unsigned int ID, double p) : sensor(name, ID), precision(p) {}
+temperature_sensor::temperature_sensor(std::string name, double p) : sensor(name, p) {}
+temperature_sensor::temperature_sensor(std::string name, unsigned int ID, double p) : sensor(name, ID, p) {}
 
 temperature_sensor *temperature_sensor::create(std::string name, double p)
 {
@@ -55,11 +55,6 @@ temperature_sensor *temperature_sensor::create(std::string name, unsigned int ID
 double temperature_sensor::getTemperature() const
 {
     return temperature;
-}
-
-double temperature_sensor::getPrecision() const
-{
-    return precision;
 }
 
 temperature_sensor *temperature_sensor::clone() const
