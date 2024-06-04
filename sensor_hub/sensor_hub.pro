@@ -10,31 +10,31 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    dust_sensor.cpp \
-    humidity_sensor.cpp \
-    load_sensors.cpp \
+    sensors/dust_sensor.cpp \
+    sensors/humidity_sensor.cpp \
+    functions/load_sensors.cpp \
     main.cpp \
-    mainwindow.cpp \
-    sensor.cpp \
-    sensor_data_handler.cpp \
-    sensor_operations.cpp \
-    sensor_simulation.cpp \
-    sensor_simulation_manager.cpp \
-    sensordialog.cpp \
-    temperature_sensor.cpp
+    view/mainwindow.cpp \
+    sensors/sensor.cpp \
+    view/sensor_data_handler.cpp \
+    functions/sensor_operations.cpp \
+    functions/sensor_simulation.cpp \
+    view/sensor_simulation_manager.cpp \
+    functions/sensordialog.cpp \
+    sensors/temperature_sensor.cpp
 
 HEADERS += \
-    dust_sensor.h \
-    humidity_sensor.h \
-    load_sensors.h \
-    mainwindow.h \
-    sensor.h \
-    sensor_data_handler.h \
-    sensor_operations.h \
-    sensor_simulation.h \
-    sensor_simulation_manager.h \
-    sensordialog.h \
-    temperature_sensor.h
+    sensors/dust_sensor.h \
+    sensors/humidity_sensor.h \
+    functions/load_sensors.h \
+    view/mainwindow.h \
+    sensors/sensor.h \
+    view/sensor_data_handler.h \
+    functions/sensor_operations.h \
+    functions/sensor_simulation.h \
+    view/sensor_simulation_manager.h \
+    functions/sensordialog.h \
+    sensors/temperature_sensor.h
 
 FORMS += \
     mainwindow.ui
