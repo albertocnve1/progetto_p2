@@ -12,7 +12,7 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <unordered_map>
-#include "sensor.h"
+#include "sensors/sensor.h"
 
 class SensorOperations
 {

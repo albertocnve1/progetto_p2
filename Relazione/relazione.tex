@@ -1,5 +1,9 @@
 \documentclass{article}
 \usepackage{titling}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{helvet}
+\usepackage{hyperref}
 
 \title{Relazione progetto Programmazione ad Oggetti}
 \author{Alberto Canavese\\Numero matricola: 2076423}
@@ -15,6 +19,9 @@
     \postdate{\end{center}}
     \maketitle
 
+    % Change font to Helvetica for the rest of the document
+    \renewcommand{\familydefault}{\sfdefault}
+
     % Pagina introduzione
     \newpage
     \section{Introduzione}
@@ -22,16 +29,16 @@
     diversi di sensori virtuali.
     
     Il programma permette di creare, modificare, cancellare e ricercare i sensori tramite un'interfaccia
-     grafica intuitiva.
+    grafica intuitiva.
         
     Vi sono due modi per dichiarare un sensore:
     \begin{itemize}
-        \item \textbf{Tramite interfaccia}: Creando da 0 un sensore con i dati inseriti dall'utente tramite un'opportuna finestra di dialogo.
-        \item \textbf{Tramite file}: Importando, tramite finstra di dialogo, un file txt contenente i dati del sensore.
+        \item \textbf{Tramite interfaccia}: Creando da zero un sensore con i dati inseriti dall'utente tramite un'opportuna finestra di dialogo.
+        \item \textbf{Tramite file}: Importando, tramite finestra di dialogo, un file txt contenente i dati del sensore.
     \end{itemize} 
     La funzionalità principale di \textbf{Sensor Hub} è la possibilità di avviare una simulazione di lettura dati per un qualsiasi sensore selezionato. 
     
-    La simulazione genera una serie di dati, coerenti con il tipo di sensore, che vengono visualizzate graficamente utilizzando la classe \textbf{Qt Charts}.
+    La simulazione genera una serie di dati, coerenti con il tipo di sensore, che vengono visualizzati graficamente utilizzando la classe \textbf{Qt Charts}.
 
     Tutti i dati di simulazione e tutti i dettagli di ogni sensore vengono salvati nel medesimo file di testo, in modo da supportare la persistenza dei dati. 
 
@@ -39,4 +46,19 @@
     di dialogo utile per selezionare il percorso di destinazione del file generato dal programma.  
 
     \section{Descrizione del modello}
+    Il modello logico è composto da una gerarchia di classi che rappresenta i vari tipi di sensori istanziabili e simulabili. 
+        
+    Di seguito il diagramma UML:    
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.8\textwidth]{UML.png}
+        \caption*{Diagramma UML}
+    \end{figure}
+    
+    \newpage
+    \noindent Il modello parte da una classe astratta “sensor” che contiene le informazioni comuni a tutti i tipi di sensori, quali:
+    \begin{itemize}
+        \item \textbf{ID} 
+        \item \textbf{Nome}
+    \end{itemize} 
 \end{document}

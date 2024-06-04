@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QTimer>
 #include <unordered_map>
-#include "sensor.h"
+#include "sensors/sensor.h"
 
 class SensorSimulation : public QObject
 {

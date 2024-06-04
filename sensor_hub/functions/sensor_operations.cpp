@@ -1,8 +1,8 @@
 #include "sensor_operations.h"
-#include "dust_sensor.h"
-#include "temperature_sensor.h"
-#include "humidity_sensor.h"
-#include "sensordialog.h"
+#include "sensors/dust_sensor.h"
+#include "sensors/temperature_sensor.h"
+#include "sensors/humidity_sensor.h"
+#include "functions/sensordialog.h"
 
 void SensorOperations::editSensor(QListWidget *listWidget, QWidget *parent)
 {
