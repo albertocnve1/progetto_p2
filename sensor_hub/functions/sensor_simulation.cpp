@@ -2,6 +2,7 @@
 #include "sensors/dust_sensor.h"
 #include "sensors/temperature_sensor.h"
 #include "sensors/humidity_sensor.h"
+#include <cmath>
 #include <QRandomGenerator>
 #include <QDateTime>
 
@@ -39,6 +40,8 @@ void SensorSimulation::stopSimulation()
     simulationTimer->stop();
 }
 
+#include <cmath> // Per la funzione round
+
 void SensorSimulation::generateSensorData()
 {
     if (sensors.find(currentSensorId) != sensors.end())
@@ -48,21 +51,21 @@ void SensorSimulation::generateSensorData()
         if (dynamic_cast<dust_sensor *>(s))
         {
             value = QRandomGenerator::global()->bounded(50.0);
+            value = std::round(value * 100.0) / 100.0;
             dynamic_cast<dust_sensor *>(s)->setDustLevel(value);
         }
         else if (dynamic_cast<temperature_sensor *>(s))
         {
             value = QRandomGenerator::global()->bounded(120.0) - 20.0;
+            value = std::round(value * 100.0) / 100.0;
             dynamic_cast<temperature_sensor *>(s)->setTemperature(value);
         }
         else if (dynamic_cast<humidity_sensor *>(s))
         {
             value = QRandomGenerator::global()->bounded(100.0);
+            value = std::round(value * 100.0) / 100.0;
             dynamic_cast<humidity_sensor *>(s)->setHumidity(value);
         }
-
-        // Limita il valore a due cifre decimali
-        value = QString::number(value, 'f', 2).toDouble();
 
         qint64 timestamp = QDateTime::currentMSecsSinceEpoch();
         double relativeTime = (timestamp - startTime) / 1000.0;
@@ -72,3 +75,4 @@ void SensorSimulation::generateSensorData()
         emit newSensorData(currentSensorId, relativeTime, value); // Usa il tempo relativo
     }
 }
+
