@@ -13,12 +13,12 @@ private:
     dust_sensor(std::string, unsigned int, double);
 
 public:
-    static dust_sensor* create(std::string, double);
-    static dust_sensor* create(std::string, unsigned int, double);
+    static dust_sensor *create(std::string, double);
+    static dust_sensor *create(std::string, unsigned int, double);
     double getDustLevel() const;
     double getPrecision() const override;
-    dust_sensor* clone() const override;
-    void setDustLevel(double); // Metodo per aggiornare il livello di polvere
+    dust_sensor *clone() const override;
+    void setDustLevel(double);
 };
 
 #endif // DUST_SENSOR_H

@@ -18,7 +18,10 @@
 #include "sensor_simulation_manager.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui
+{
+    class MainWindow;
+}
 QT_END_NAMESPACE
 
 class MainWindow : public QWidget
@@ -39,17 +42,16 @@ private:
     QLineEdit searchBox;
     QListWidget listWidget;
     QLabel detailsLabel;
+    QLabel currentValueLabel;
     QPushButton *addButton;
     QPushButton *removeButton;
-    QChartView *chartView;
     QPushButton *startSimulationButton;
     QPushButton *stopSimulationButton;
+    QChartView *chartView;
     QVBoxLayout *rightLayout;
-    SensorSimulation *sensorSimulation;
     QString getAxisLabel(const std::string &sensorType);
-    QLabel currentValueLabel;
-    SensorSimulationManager *sensorSimulationManager; // Dichiarazione del gestore della simulazione
-
+    SensorSimulation *sensorSimulation;
+    SensorSimulationManager *sensorSimulationManager;
 };
 
 #endif // MAINWINDOW_H

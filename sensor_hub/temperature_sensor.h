@@ -13,12 +13,12 @@ private:
     temperature_sensor(std::string, unsigned int, double);
 
 public:
-    static temperature_sensor* create(std::string, double);
-    static temperature_sensor* create(std::string, unsigned int, double);
+    static temperature_sensor *create(std::string, double);
+    static temperature_sensor *create(std::string, unsigned int, double);
     double getTemperature() const;
     double getPrecision() const override;
-    temperature_sensor* clone() const override;
-    void setTemperature(double); // Metodo per aggiornare la temperatura
+    temperature_sensor *clone() const override;
+    void setTemperature(double);
 };
 
 #endif // TEMPERATURE_SENSOR_H

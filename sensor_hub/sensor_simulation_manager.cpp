@@ -10,12 +10,12 @@ SensorSimulationManager::SensorSimulationManager(QChartView *chartView, QLabel *
     : QObject(parent), chartView(chartView), detailsLabel(detailsLabel), currentValueLabel(currentValueLabel), listWidget(listWidget), parent(parent)
 {
     sensorSimulation = new SensorSimulation(this);
-    connect(sensorSimulation, &SensorSimulation::newSensorData, this, [this](int sensorId, double time, double value) {
+    connect(sensorSimulation, &SensorSimulation::newSensorData, this, [this](int sensorId, double time, double value)
+            {
         Q_UNUSED(sensorId);
         Q_UNUSED(time);
         Q_UNUSED(value);
-        displaySensorDetails();
-    });
+        displaySensorDetails(); });
 }
 
 void SensorSimulationManager::displaySensorDetails()
@@ -24,8 +24,8 @@ void SensorSimulationManager::displaySensorDetails()
     if (!selectedItem)
     {
         detailsLabel->setText("Dettagli del sensore qui");
-        currentValueLabel->setText(""); // Nascondi il valore della misurazione attuale
-        chartView->setChart(nullptr); // Rimuovi il grafico
+        currentValueLabel->setText("");
+        chartView->setChart(nullptr);
         return;
     }
 
@@ -38,17 +38,16 @@ void SensorSimulationManager::displaySensorDetails()
 
         QString details = QString("ID: %1\nNome: %2\nPrecisione: %3").arg(s->getID()).arg(QString::fromStdString(s->getName())).arg(s->getPrecision());
 
-        // Crea un nuovo grafico
+        // Creazione di un nuovo grafico
         QChart *chart = new QChart();
         QLineSeries *series = new QLineSeries();
 
-        // Usare dynamic_cast per determinare il tipo di sensore e impostare i limiti dell'asse Y
         if (dynamic_cast<dust_sensor *>(s))
         {
             details += "\nTipo: Dust Sensor";
             currentValueLabel->setText(QString("Livello PM10 attuale: %1 μg/m³").arg(dynamic_cast<dust_sensor *>(s)->getDustLevel()));
 
-            for (const auto& data : dynamic_cast<dust_sensor *>(s)->getChartData())
+            for (const auto &data : dynamic_cast<dust_sensor *>(s)->getChartData())
             {
                 series->append(data.first, data.second);
             }
@@ -71,7 +70,7 @@ void SensorSimulationManager::displaySensorDetails()
             details += "\nTipo: Temperature Sensor";
             currentValueLabel->setText(QString("Temperatura attuale: %1 °C").arg(dynamic_cast<temperature_sensor *>(s)->getTemperature()));
 
-            for (const auto& data : dynamic_cast<temperature_sensor *>(s)->getChartData())
+            for (const auto &data : dynamic_cast<temperature_sensor *>(s)->getChartData())
             {
                 series->append(data.first, data.second);
             }
@@ -94,7 +93,7 @@ void SensorSimulationManager::displaySensorDetails()
             details += "\nTipo: Humidity Sensor";
             currentValueLabel->setText(QString("Livello umidità attuale: %1 %").arg(dynamic_cast<humidity_sensor *>(s)->getHumidity()));
 
-            for (const auto& data : dynamic_cast<humidity_sensor *>(s)->getChartData())
+            for (const auto &data : dynamic_cast<humidity_sensor *>(s)->getChartData())
             {
                 series->append(data.first, data.second);
             }
@@ -113,9 +112,8 @@ void SensorSimulationManager::displaySensorDetails()
             series->attachAxis(axisY);
         }
 
-        chart->legend()->hide(); // Nascondi la leggenda
+        chart->legend()->hide();
 
-        // Imposta un intervallo iniziale di 20 secondi per l'asse X
         if (series->count() > 0)
         {
             chart->axes(Qt::Horizontal).first()->setRange(0, series->at(series->count() - 1).x());
@@ -127,12 +125,6 @@ void SensorSimulationManager::displaySensorDetails()
 
         chartView->setChart(chart);
         detailsLabel->setText(details);
-    }
-    else
-    {
-        detailsLabel->setText("Seleziona un sensore per mostrare i dettagli");
-        currentValueLabel->setText(""); // Nascondi il valore della misurazione attuale
-        chartView->setChart(nullptr); // Rimuovi il grafico
     }
 }
 
@@ -164,7 +156,6 @@ void SensorSimulationManager::startSimulation()
         axisX->setTitleText("Tempo (s)");
         QValueAxis *axisY = new QValueAxis;
 
-        // Usare dynamic_cast per determinare il tipo di sensore e impostare i limiti dell'asse Y
         if (dynamic_cast<dust_sensor *>(s))
         {
             axisY->setRange(0, 50);
@@ -186,9 +177,8 @@ void SensorSimulationManager::startSimulation()
         series->attachAxis(axisX);
         series->attachAxis(axisY);
 
-        chart->legend()->hide(); // Nascondere la leggenda
+        chart->legend()->hide();
 
-        // Imposta un intervallo iniziale di 20 secondi per l'asse X
         axisX->setRange(0, 20);
 
         chartView->setChart(chart);

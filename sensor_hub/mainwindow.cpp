@@ -44,19 +44,15 @@ MainWindow::MainWindow(QWidget *parent)
     addButton->setMenu(addMenu);
 
     // Connessione del pulsante "+" a uno slot per aggiungere un nuovo sensore da GUI
-    connect(addButton, &QPushButton::clicked, this, [this]() {
-        SensorOperations::addSensor(&listWidget, this);
-    });
-    connect(newSensorAction, &QAction::triggered, this, [this]() {
-        SensorOperations::newSensor(&listWidget, this);
-    });
+    connect(addButton, &QPushButton::clicked, this, [this]()
+            { SensorOperations::addSensor(&listWidget, this); });
+    connect(newSensorAction, &QAction::triggered, this, [this]()
+            { SensorOperations::newSensor(&listWidget, this); });
     // Connessione del pulsante "+" a uno slot per importare un sensore da file
-    connect(importFromFileAction, &QAction::triggered, this, [this]() {
-        SensorOperations::addSensor(&listWidget, this);
-    });
-    connect(removeButton, &QPushButton::clicked, this, [this]() {
-        SensorOperations::deleteSensor(&listWidget, this);
-    });
+    connect(importFromFileAction, &QAction::triggered, this, [this]()
+            { SensorOperations::addSensor(&listWidget, this); });
+    connect(removeButton, &QPushButton::clicked, this, [this]()
+            { SensorOperations::deleteSensor(&listWidget, this); });
 
     // Creazione dello spazio per la lista di sensori a sx
     QVBoxLayout *leftLayout = new QVBoxLayout;
@@ -78,10 +74,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     layout->addLayout(rightLayout);
 
-    // Imposta una dimensione dell'icona personalizzata
+    // Impostazione una dimensione dell'icona personalizzata
     listWidget.setIconSize(QSize(48, 48)); // Imposta la dimensione desiderata delle icone
 
-    // Connetti la casella di ricerca al filtro
+    // Connessione la casella di ricerca al filtro
     connect(&searchBox, &QLineEdit::textChanged, this, &MainWindow::filterSensors);
 
     resize(1000, 500);
@@ -99,14 +95,14 @@ MainWindow::MainWindow(QWidget *parent)
     // Ottenimento dell'elenco dei sensori istanziati
     std::unordered_map<unsigned int, sensor *> &sensors = sensor::getSensors();
 
-    // Aggiungi i sensori istanziati all'elenco laterale sx
+    // Aggiunta dei sensori istanziati all'elenco laterale sx
     for (const auto &pair : sensors)
     {
         sensor *s = pair.second;
         QString sensorInfo = QString::number(s->getID()) + ": " + QString::fromStdString(s->getName());
         QListWidgetItem *item = new QListWidgetItem(sensorInfo);
 
-        // Aggiungi l'immagine in base al tipo di sensore
+        // Aggiunta dell'immagine in base al tipo di sensore
         QString imagePath = ":/assets/default.png"; // Percorso predefinito
 
         if (dynamic_cast<dust_sensor *>(s))
@@ -158,15 +154,13 @@ void MainWindow::showContextMenu(const QPoint &pos)
     QMenu contextMenu(tr("Context menu"), this);
 
     QAction actionEdit("Modifica", this);
-    connect(&actionEdit, &QAction::triggered, this, [this]() {
-        SensorOperations::editSensor(&listWidget, this);
-    });
+    connect(&actionEdit, &QAction::triggered, this, [this]()
+            { SensorOperations::editSensor(&listWidget, this); });
     contextMenu.addAction(&actionEdit);
 
     QAction actionExport("Esporta", this);
-    connect(&actionExport, &QAction::triggered, this, [this]() {
-        SensorOperations::exportSensor(&listWidget, this);
-    });
+    connect(&actionExport, &QAction::triggered, this, [this]()
+            { SensorOperations::exportSensor(&listWidget, this); });
     contextMenu.addAction(&actionExport);
 
     contextMenu.exec(listWidget.mapToGlobal(pos));

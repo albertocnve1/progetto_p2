@@ -140,7 +140,7 @@ void SensorOperations::addSensor(QListWidget *listWidget, QWidget *parent)
                 if (type == "Dust Sensor")
                 {
                     dust_sensor *sensor = dust_sensor::create(name, id, precision);
-                    for (const auto& data : chartData)
+                    for (const auto &data : chartData)
                     {
                         sensor->addChartData(data.first, data.second);
                     }
@@ -149,7 +149,7 @@ void SensorOperations::addSensor(QListWidget *listWidget, QWidget *parent)
                 else if (type == "Temperature Sensor")
                 {
                     temperature_sensor *sensor = temperature_sensor::create(name, id, precision);
-                    for (const auto& data : chartData)
+                    for (const auto &data : chartData)
                     {
                         sensor->addChartData(data.first, data.second);
                     }
@@ -158,7 +158,7 @@ void SensorOperations::addSensor(QListWidget *listWidget, QWidget *parent)
                 else if (type == "Humidity Sensor")
                 {
                     humidity_sensor *sensor = humidity_sensor::create(name, id, precision);
-                    for (const auto& data : chartData)
+                    for (const auto &data : chartData)
                     {
                         sensor->addChartData(data.first, data.second);
                     }

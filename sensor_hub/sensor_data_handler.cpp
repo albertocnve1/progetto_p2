@@ -75,22 +75,27 @@ void SensorDataHandler::handleNewSensorData(int sensorId, double time, double va
         series->append(time, value);
 
         // Aggiorna gli intervalli dell'asse X per assicurare che i dati siano visibili
-        QList<QAbstractAxis*> axesX = chart->axes(Qt::Horizontal, series);
-        if (!axesX.isEmpty()) {
+        QList<QAbstractAxis *> axesX = chart->axes(Qt::Horizontal, series);
+        if (!axesX.isEmpty())
+        {
             QValueAxis *axisX = qobject_cast<QValueAxis *>(axesX.first());
-            if (axisX) {
+            if (axisX)
+            {
                 double currentMax = axisX->max();
-                if (time > currentMax) {
+                if (time > currentMax)
+                {
                     axisX->setRange(0, currentMax * 2); // Raddoppia l'intervallo dell'asse X
                 }
             }
         }
 
         // Aggiorna il titolo dell'asse Y
-        QList<QAbstractAxis*> axesY = chart->axes(Qt::Vertical, series);
-        if (!axesY.isEmpty()) {
+        QList<QAbstractAxis *> axesY = chart->axes(Qt::Vertical, series);
+        if (!axesY.isEmpty())
+        {
             QValueAxis *axisY = qobject_cast<QValueAxis *>(axesY.first());
-            if (axisY) {
+            if (axisY)
+            {
                 // Usare dynamic_cast per determinare il tipo di sensore e impostare il titolo dell'asse Y
                 if (dynamic_cast<dust_sensor *>(s))
                 {

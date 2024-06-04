@@ -13,12 +13,12 @@ private:
     humidity_sensor(std::string, unsigned int, double);
 
 public:
-    static humidity_sensor* create(std::string, double);
-    static humidity_sensor* create(std::string, unsigned int, double);
+    static humidity_sensor *create(std::string, double);
+    static humidity_sensor *create(std::string, unsigned int, double);
     double getHumidity() const;
     double getPrecision() const override;
-    humidity_sensor* clone() const override;
-    void setHumidity(double); // Metodo per aggiornare il livello di umidità
+    humidity_sensor *clone() const override;
+    void setHumidity(double);
 };
 
 #endif // HUMIDITY_SENSOR_H

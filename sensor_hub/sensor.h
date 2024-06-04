@@ -12,33 +12,28 @@ private:
     unsigned int sensorID;
     std::string sensorName;
     static unsigned int nextID;
-    static std::unordered_map<unsigned int, sensor*> sensors;
+    static std::unordered_map<unsigned int, sensor *> sensors;
 
 protected:
     sensor(std::string);
     sensor(std::string, unsigned int);
-    std::vector<std::pair<double, double>> chartData; // Sposta qui per rendere accessibile a tutte le classi derivate
+    std::vector<std::pair<double, double>> chartData;
 
 public:
+    static std::unordered_map<unsigned int, sensor *> &getSensors();
     virtual ~sensor();
-    virtual sensor* clone() const = 0;
+    virtual sensor *clone() const = 0;
     virtual void createFile() const = 0;
-    void setName(std::string);
+    virtual double getPrecision() const = 0;
     unsigned int getID() const;
     std::string getName() const;
-    virtual double getPrecision() const = 0;
-    void updateFile(std::string newName);
-    static std::unordered_map<unsigned int, sensor*>& getSensors();
-
-    void addChartData(double, double); // Rimuovi const
-    std::vector<std::pair<double, double>> getChartData() const;
+    void setName(std::string);
+    void updateFile(std::string);
+    void addChartData(double, double);
     void clearChartData();
-
-    // Nuovo metodo per aggiornare i dati del sensore
     void updateSensorData(double, double) const;
-
-    void loadChartDataFromFile(); // Dichiarazione della funzione
-
+    void loadChartDataFromFile();
+    std::vector<std::pair<double, double>> getChartData() const;
 };
 
 #endif // SENSOR_H

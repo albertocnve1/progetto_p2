@@ -13,7 +13,7 @@ class SensorSimulation : public QObject
 public:
     explicit SensorSimulation(QObject *parent = nullptr);
     void simulateSensor(unsigned int sensorId);
-    void stopSimulation();  // Dichiarazione della funzione per interrompere la simulazione
+    void stopSimulation();
 
 signals:
     void newSensorData(int sensorId, double time, double value);
@@ -22,7 +22,7 @@ private slots:
     void generateSensorData();
 
 private:
-    std::unordered_map<unsigned int, sensor*> sensors;
+    std::unordered_map<unsigned int, sensor *> sensors;
     QTimer *simulationTimer;
     unsigned int currentSensorId;
     qint64 startTime;
