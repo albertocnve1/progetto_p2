@@ -5,7 +5,29 @@
 #include "sensors/humidity_sensor.h"
 #include "functions/sensordialog.h"
 
+#include <QDebug>
+
 QRegularExpression re("[A-Za-z]");
+
+std::vector<std::pair<double, double>> SensorOperations::readChartDataFromFile(QTextStream &in)
+{
+    std::vector<std::pair<double, double>> chartData;
+    while (!in.atEnd())
+    {
+        QString dataLine = in.readLine().trimmed();
+        qDebug() << "Chart Data Line:" << dataLine;
+        QStringList dataParts = dataLine.split(",");
+        if (dataParts.size() == 2)
+        {
+            double time = dataParts[0].toDouble();
+            double value = dataParts[1].toDouble();
+            chartData.emplace_back(time, value);
+            qDebug() << "Read Chart Data - Time:" << time << ", Value:" << value;
+        }
+    }
+    return chartData;
+}
+
 
 void SensorOperations::editSensor(QListWidget *listWidget, QWidget *parent)
 {
@@ -103,43 +125,33 @@ void SensorOperations::addSensor(QListWidget *listWidget, QWidget *parent)
         std::string type, name;
         double precision = 0.0;
         std::vector<std::pair<double, double>> chartData;
+        bool timeToReadChartData = false;
 
         while (!in.atEnd())
         {
-            QString line = in.readLine();
+            QString line = in.readLine().trimmed();
             QStringList parts = line.split(": ");
-            if (parts.size() < 2)
-                continue;
-
             if (parts[0] == "ID")
             {
                 id = parts[1].toUInt();
             }
-            else if (parts[0] == "Type")
+            if (parts[0] == "Type")
             {
                 type = parts[1].toStdString();
             }
-            else if (parts[0] == "Name")
+            if (parts[0] == "Name")
             {
                 name = parts[1].toStdString();
             }
-            else if (parts[0] == "Precision")
+            if (parts[0] == "Precision")
             {
                 precision = parts[1].toDouble();
+                timeToReadChartData = true;
             }
-            else if (parts[0] == "Chart Data")
+            if (timeToReadChartData)
             {
-                while (!in.atEnd())
-                {
-                    QString dataLine = in.readLine();
-                    QStringList dataParts = dataLine.split(",");
-                    if (dataParts.size() == 2)
-                    {
-                        double time = dataParts[0].toDouble();
-                        double value = dataParts[1].toDouble();
-                        chartData.emplace_back(time, value);
-                    }
-                }
+                chartData = SensorOperations::readChartDataFromFile(in);
+                break;
             }
         }
 
@@ -155,6 +167,7 @@ void SensorOperations::addSensor(QListWidget *listWidget, QWidget *parent)
                 dust_sensor *sensor = dust_sensor::create(name, id, precision);
                 for (const auto &data : chartData)
                 {
+                    qDebug() << "Dust Sensor Chart Data - Time:" << data.first << ", Value:" << data.second;
                     sensor->addChartData(data.first, data.second);
                 }
                 imagePath = ":/assets/dust_sensor_icon.png";
@@ -166,6 +179,7 @@ void SensorOperations::addSensor(QListWidget *listWidget, QWidget *parent)
                 temperature_sensor *sensor = temperature_sensor::create(name, id, precision);
                 for (const auto &data : chartData)
                 {
+                    qDebug() << "Temperature Sensor Chart Data - Time:" << data.first << ", Value:" << data.second;
                     sensor->addChartData(data.first, data.second);
                 }
                 imagePath = ":/assets/temperature_sensor_icon.png";
@@ -177,12 +191,14 @@ void SensorOperations::addSensor(QListWidget *listWidget, QWidget *parent)
                 humidity_sensor *sensor = humidity_sensor::create(name, id, precision);
                 for (const auto &data : chartData)
                 {
+                    qDebug() << "Humidity Sensor Chart Data - Time:" << data.first << ", Value:" << data.second;
                     sensor->addChartData(data.first, data.second);
                 }
                 imagePath = ":/assets/humidity_sensor_icon.png";
                 item->setIcon(QIcon(imagePath));
                 listWidget->addItem(item);
             }
+            qDebug() << "Sensor added to list widget with image path:" << imagePath;
         }
         catch (const std::runtime_error &e)
         {
@@ -190,6 +206,8 @@ void SensorOperations::addSensor(QListWidget *listWidget, QWidget *parent)
         }
     }
 }
+
+
 
 void SensorOperations::newSensor(QListWidget *listWidget, QWidget *parent)
 {
@@ -283,3 +301,7 @@ void SensorOperations::deleteSensor(QListWidget *listWidget, QWidget *parent)
         QMessageBox::warning(parent, QObject::tr("Errore"), QObject::tr("Sensore non trovato"));
     }
 }
+
+
+
+

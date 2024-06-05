@@ -22,6 +22,9 @@ public:
     static void addSensor(QListWidget *listWidget, QWidget *parent);
     static void newSensor(QListWidget *listWidget, QWidget *parent);
     static void deleteSensor(QListWidget *listWidget, QWidget *parent);
+private:
+    static std::vector<std::pair<double, double>> readChartDataFromFile(QTextStream &);
+
 };
 
 #endif // SENSOR_OPERATIONS_H
