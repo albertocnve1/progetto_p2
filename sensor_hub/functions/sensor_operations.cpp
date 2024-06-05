@@ -169,6 +169,7 @@ void SensorOperations::addSensor(QListWidget *listWidget, QWidget *parent)
                 {
                     qDebug() << "Dust Sensor Chart Data - Time:" << data.first << ", Value:" << data.second;
                     sensor->addChartData(data.first, data.second);
+                    sensor->updateSensorData(data.first, data.second);
                 }
                 imagePath = ":/assets/dust_sensor_icon.png";
                 item->setIcon(QIcon(imagePath));
@@ -181,6 +182,7 @@ void SensorOperations::addSensor(QListWidget *listWidget, QWidget *parent)
                 {
                     qDebug() << "Temperature Sensor Chart Data - Time:" << data.first << ", Value:" << data.second;
                     sensor->addChartData(data.first, data.second);
+                    sensor->updateSensorData(data.first, data.second);
                 }
                 imagePath = ":/assets/temperature_sensor_icon.png";
                 item->setIcon(QIcon(imagePath));
@@ -193,6 +195,7 @@ void SensorOperations::addSensor(QListWidget *listWidget, QWidget *parent)
                 {
                     qDebug() << "Humidity Sensor Chart Data - Time:" << data.first << ", Value:" << data.second;
                     sensor->addChartData(data.first, data.second);
+                    sensor->updateSensorData(data.first, data.second);
                 }
                 imagePath = ":/assets/humidity_sensor_icon.png";
                 item->setIcon(QIcon(imagePath));
