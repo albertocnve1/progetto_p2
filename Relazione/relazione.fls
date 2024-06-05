@@ -389,6 +389,17 @@ INPUT /usr/local/texlive/2022/texmf-dist/tex/generic/uniquecounter/uniquecounter
 INPUT /usr/local/texlive/2022/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
 INPUT /usr/local/texlive/2022/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
 INPUT /usr/local/texlive/2022/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+INPUT /usr/local/texlive/2022/texmf-dist/tex/latex/sectsty/sectsty.sty
+INPUT /usr/local/texlive/2022/texmf-dist/tex/latex/sectsty/sectsty.sty
+INPUT /usr/local/texlive/2022/texmf-dist/tex/latex/sectsty/sectsty.sty
+INPUT /usr/local/texlive/2022/texmf-dist/tex/latex/sectsty/sectsty.sty
+INPUT /usr/local/texlive/2022/texmf-dist/tex/latex/sectsty/sectsty.sty
+INPUT /usr/local/texlive/2022/texmf-dist/tex/latex/sectsty/sectsty.sty
+INPUT /usr/local/texlive/2022/texmf-dist/tex/latex/sectsty/sectsty.sty
+INPUT /usr/local/texlive/2022/texmf-dist/tex/latex/sectsty/sectsty.sty
+INPUT /usr/local/texlive/2022/texmf-dist/tex/latex/sectsty/sectsty.sty
+INPUT /usr/local/texlive/2022/texmf-dist/tex/latex/sectsty/sectsty.sty
+INPUT /usr/local/texlive/2022/texmf-dist/tex/latex/sectsty/sectsty.sty
 INPUT /usr/local/texlive/2022/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT /usr/local/texlive/2022/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT /usr/local/texlive/2022/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
@@ -484,6 +495,7 @@ INPUT /usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map
 INPUT /usr/local/texlive/2022/texmf-dist/fonts/vf/adobe/helvetic/phvr7t.vf
 INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/adobe/helvetic/phvr8r.tfm
 INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/adobe/helvetic/phvr7t.tfm
+INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/adobe/helvetic/phvb7t.tfm
 INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/adobe/helvetic/phvb7t.tfm
 INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
 INPUT /usr/local/texlive/2022/texmf-dist/tex/latex/psnfss/ts1phv.fd
