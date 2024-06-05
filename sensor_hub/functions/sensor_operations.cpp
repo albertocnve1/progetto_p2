@@ -94,89 +94,99 @@ void SensorOperations::addSensor(QListWidget *listWidget, QWidget *parent)
 
     if (fileName.isEmpty())
         return;
-    else
+
+    QFile file(fileName);
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        QFile file(fileName);
-        if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+        QTextStream in(&file);
+        unsigned int id = 0;
+        std::string type, name;
+        double precision = 0.0;
+        std::vector<std::pair<double, double>> chartData;
+
+        while (!in.atEnd())
         {
-            QTextStream in(&file);
-            unsigned int id = 0;
-            std::string type, name;
-            double precision = 0.0;
-            std::vector<std::pair<double, double>> chartData;
+            QString line = in.readLine();
+            QStringList parts = line.split(": ");
+            if (parts.size() < 2)
+                continue;
 
-            while (!in.atEnd())
+            if (parts[0] == "ID")
             {
-                QString line = in.readLine();
-                QStringList parts = line.split(": ");
-                if (parts[0] == "ID")
+                id = parts[1].toUInt();
+            }
+            else if (parts[0] == "Type")
+            {
+                type = parts[1].toStdString();
+            }
+            else if (parts[0] == "Name")
+            {
+                name = parts[1].toStdString();
+            }
+            else if (parts[0] == "Precision")
+            {
+                precision = parts[1].toDouble();
+            }
+            else if (parts[0] == "Chart Data")
+            {
+                while (!in.atEnd())
                 {
-                    id = parts[1].toUInt();
-                }
-                else if (parts[0] == "Type")
-                {
-                    type = parts[1].toStdString();
-                }
-                else if (parts[0] == "Name")
-                {
-                    name = parts[1].toStdString();
-                }
-                else if (parts[0] == "Precision")
-                {
-                    precision = parts[1].toDouble();
-                }
-                else if (parts[0] == "Chart Data")
-                {
-                    while (!in.atEnd())
+                    QString dataLine = in.readLine();
+                    QStringList dataParts = dataLine.split(",");
+                    if (dataParts.size() == 2)
                     {
-                        QString dataLine = in.readLine();
-                        QStringList dataParts = dataLine.split(",");
-                        if (dataParts.size() == 2)
-                        {
-                            double time = dataParts[0].toDouble();
-                            double value = dataParts[1].toDouble();
-                            chartData.emplace_back(time, value);
-                        }
+                        double time = dataParts[0].toDouble();
+                        double value = dataParts[1].toDouble();
+                        chartData.emplace_back(time, value);
                     }
                 }
             }
+        }
 
-            QString sensorInfo = QString::number(id) + ": " + QString::fromStdString(name);
+        QString sensorInfo = QString::number(id) + ": " + QString::fromStdString(name);
 
-            try
+        try
+        {
+            QListWidgetItem *item = new QListWidgetItem(sensorInfo);
+            QString imagePath = ":/assets/default.png"; // Percorso predefinito
+
+            if (type == "Dust Sensor")
             {
-                if (type == "Dust Sensor")
+                dust_sensor *sensor = dust_sensor::create(name, id, precision);
+                for (const auto &data : chartData)
                 {
-                    dust_sensor *sensor = dust_sensor::create(name, id, precision);
-                    for (const auto &data : chartData)
-                    {
-                        sensor->addChartData(data.first, data.second);
-                    }
-                    listWidget->addItem(sensorInfo);
+                    sensor->addChartData(data.first, data.second);
                 }
-                else if (type == "Temperature Sensor")
-                {
-                    temperature_sensor *sensor = temperature_sensor::create(name, id, precision);
-                    for (const auto &data : chartData)
-                    {
-                        sensor->addChartData(data.first, data.second);
-                    }
-                    listWidget->addItem(sensorInfo);
-                }
-                else if (type == "Humidity Sensor")
-                {
-                    humidity_sensor *sensor = humidity_sensor::create(name, id, precision);
-                    for (const auto &data : chartData)
-                    {
-                        sensor->addChartData(data.first, data.second);
-                    }
-                    listWidget->addItem(sensorInfo);
-                }
+                imagePath = ":/assets/dust_sensor_icon.png";
+                item->setIcon(QIcon(imagePath));
+                listWidget->addItem(item);
             }
-            catch (const std::runtime_error &e)
+            else if (type == "Temperature Sensor")
             {
-                QMessageBox::warning(parent, QObject::tr("Errore"), QObject::tr("ID del sensore già esistente"));
+                temperature_sensor *sensor = temperature_sensor::create(name, id, precision);
+                for (const auto &data : chartData)
+                {
+                    sensor->addChartData(data.first, data.second);
+                }
+                imagePath = ":/assets/temperature_sensor_icon.png";
+                item->setIcon(QIcon(imagePath));
+                listWidget->addItem(item);
             }
+            else if (type == "Humidity Sensor")
+            {
+                humidity_sensor *sensor = humidity_sensor::create(name, id, precision);
+                for (const auto &data : chartData)
+                {
+                    sensor->addChartData(data.first, data.second);
+                }
+                imagePath = ":/assets/humidity_sensor_icon.png";
+                item->setIcon(QIcon(imagePath));
+                listWidget->addItem(item);
+            }
+        }
+        catch (const std::runtime_error &e)
+        {
+            QMessageBox::warning(parent, QObject::tr("Errore"), QObject::tr("ID del sensore già esistente"));
         }
     }
 }
@@ -198,23 +208,33 @@ void SensorOperations::newSensor(QListWidget *listWidget, QWidget *parent)
 
         try
         {
+            QString imagePath = ":/assets/default.png"; // Percorso predefinito
             if (type == "Humidity Sensor")
             {
                 humidity_sensor *sensor = humidity_sensor::create(name.toStdString(), id, precision);
                 QString sensorInfo = QString::number(sensor->getID()) + ": " + QString::fromStdString(sensor->getName());
-                listWidget->addItem(sensorInfo);
+                QListWidgetItem *item = new QListWidgetItem(sensorInfo);
+                imagePath = ":/assets/humidity_sensor_icon.png";
+                item->setIcon(QIcon(imagePath));
+                listWidget->addItem(item);
             }
             else if (type == "Dust Sensor")
             {
                 dust_sensor *sensor = dust_sensor::create(name.toStdString(), id, precision);
                 QString sensorInfo = QString::number(sensor->getID()) + ": " + QString::fromStdString(sensor->getName());
-                listWidget->addItem(sensorInfo);
+                QListWidgetItem *item = new QListWidgetItem(sensorInfo);
+                imagePath = ":/assets/dust_sensor_icon.png";
+                item->setIcon(QIcon(imagePath));
+                listWidget->addItem(item);
             }
             else if (type == "Temperature Sensor")
             {
                 temperature_sensor *sensor = temperature_sensor::create(name.toStdString(), id, precision);
                 QString sensorInfo = QString::number(sensor->getID()) + ": " + QString::fromStdString(sensor->getName());
-                listWidget->addItem(sensorInfo);
+                QListWidgetItem *item = new QListWidgetItem(sensorInfo);
+                imagePath = ":/assets/temperature_sensor_icon.png";
+                item->setIcon(QIcon(imagePath));
+                listWidget->addItem(item);
             }
         }
         catch (const std::runtime_error &e)
