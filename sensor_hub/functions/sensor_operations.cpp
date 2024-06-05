@@ -1,8 +1,11 @@
+#include <QRegularExpression>
 #include "sensor_operations.h"
 #include "sensors/dust_sensor.h"
 #include "sensors/temperature_sensor.h"
 #include "sensors/humidity_sensor.h"
 #include "functions/sensordialog.h"
+
+QRegularExpression re("[A-Za-z]");
 
 void SensorOperations::editSensor(QListWidget *listWidget, QWidget *parent)
 {
@@ -30,8 +33,13 @@ void SensorOperations::editSensor(QListWidget *listWidget, QWidget *parent)
     QString text = QInputDialog::getText(parent, QObject::tr("Modifica nome"),
                                          QObject::tr("Inserisci il nuovo nome:"), QLineEdit::Normal,
                                          QString::fromStdString(sensorToEdit->getName()), &ok);
-    if (ok && !text.isEmpty())
+    if (ok)
     {
+        if (!re.match(text).hasMatch())
+        {
+            QMessageBox::warning(parent, QObject::tr("Errore"), QObject::tr("Nome inserito non valido"));
+            return;
+        }
         sensorToEdit->setName(text.toStdString());
         selectedItem->setText(QString::number(sensorToEdit->getID()) + ": " + text);
     }
@@ -167,7 +175,6 @@ void SensorOperations::addSensor(QListWidget *listWidget, QWidget *parent)
             }
             catch (const std::runtime_error &e)
             {
-                // Gestisci l'errore qui, ad esempio mostrando un messaggio di errore all'utente
                 QMessageBox::warning(parent, QObject::tr("Errore"), QObject::tr("ID del sensore già esistente"));
             }
         }
@@ -183,24 +190,36 @@ void SensorOperations::newSensor(QListWidget *listWidget, QWidget *parent)
         QString type = dialog.typeEdit->currentText();
         QString name = dialog.nameEdit->text();
         double precision = dialog.precisionEdit->text().toDouble();
+        if (!re.match(name).hasMatch())
+        {
+            QMessageBox::warning(parent, QObject::tr("Errore"), QObject::tr("Impostare un nome valido"));
+            return;
+        }
 
-        if (type == "Humidity Sensor")
+        try
         {
-            humidity_sensor *sensor = humidity_sensor::create(name.toStdString(), id, precision);
-            QString sensorInfo = QString::number(sensor->getID()) + ": " + QString::fromStdString(sensor->getName());
-            listWidget->addItem(sensorInfo);
+            if (type == "Humidity Sensor")
+            {
+                humidity_sensor *sensor = humidity_sensor::create(name.toStdString(), id, precision);
+                QString sensorInfo = QString::number(sensor->getID()) + ": " + QString::fromStdString(sensor->getName());
+                listWidget->addItem(sensorInfo);
+            }
+            else if (type == "Dust Sensor")
+            {
+                dust_sensor *sensor = dust_sensor::create(name.toStdString(), id, precision);
+                QString sensorInfo = QString::number(sensor->getID()) + ": " + QString::fromStdString(sensor->getName());
+                listWidget->addItem(sensorInfo);
+            }
+            else if (type == "Temperature Sensor")
+            {
+                temperature_sensor *sensor = temperature_sensor::create(name.toStdString(), id, precision);
+                QString sensorInfo = QString::number(sensor->getID()) + ": " + QString::fromStdString(sensor->getName());
+                listWidget->addItem(sensorInfo);
+            }
         }
-        else if (type == "Dust Sensor")
+        catch (const std::runtime_error &e)
         {
-            dust_sensor *sensor = dust_sensor::create(name.toStdString(), id, precision);
-            QString sensorInfo = QString::number(sensor->getID()) + ": " + QString::fromStdString(sensor->getName());
-            listWidget->addItem(sensorInfo);
-        }
-        else if (type == "Temperature Sensor")
-        {
-            temperature_sensor *sensor = temperature_sensor::create(name.toStdString(), id, precision);
-            QString sensorInfo = QString::number(sensor->getID()) + ": " + QString::fromStdString(sensor->getName());
-            listWidget->addItem(sensorInfo);
+            QMessageBox::warning(parent, QObject::tr("Errore"), QObject::tr("ID del sensore già esistente"));
         }
     }
 }
