@@ -23,8 +23,38 @@
      <height>24</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionNuovo_sensore"/>
+    <addaction name="actionImporta_sensore"/>
+    <addaction name="actionModifica_sensore"/>
+    <addaction name="actionRimuovi_sensore"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionNuovo_sensore">
+   <property name="text">
+    <string>Nuovo sensore</string>
+   </property>
+  </action>
+  <action name="actionImporta_sensore">
+   <property name="text">
+    <string>Importa sensore</string>
+   </property>
+  </action>
+  <action name="actionModifica_sensore">
+   <property name="text">
+    <string>Modifica sensore</string>
+   </property>
+  </action>
+  <action name="actionRimuovi_sensore">
+   <property name="text">
+    <string>Rimuovi sensore</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

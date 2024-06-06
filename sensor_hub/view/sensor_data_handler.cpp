@@ -67,7 +67,6 @@ void SensorDataHandler::handleNewSensorData(int sensorId, double time, double va
             chart->legend()->hide(); // Nascondere la leggenda
 
             // Imposta un intervallo iniziale di 20 secondi per l'asse X
-            axisX->setRange(0, 20);
 
             chartView->setChart(chart);
         }

@@ -22,48 +22,76 @@
 #include <QIcon>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QWidget(parent), layout(new QHBoxLayout(this)), detailsLabel(""), chartView(new QChartView), startSimulationButton(new QPushButton("Avvia nuova simulazione")), stopSimulationButton(new QPushButton("Interrompi Simulazione"))
+    : QWidget(parent), layout(new QHBoxLayout(this)), searchBox(new QLineEdit), listWidget(new QListWidget),
+    detailsLabel(new QLabel), currentValueLabel(new QLabel), chartView(new QChartView),
+    addButton(new QPushButton("+")), removeButton(new QPushButton("-")),
+    startSimulationButton(new QPushButton("Avvia nuova simulazione")), stopSimulationButton(new QPushButton("Interrompi Simulazione"))
 {
+    // Creazione della barra dei menu
+    menuBar = new QMenuBar(this);
+    fileMenu = new QMenu(tr("File"), this);
+    menuBar->addMenu(fileMenu);
+
+    newSensorAction = new QAction(tr("Nuovo sensore"), this);
+    importSensorAction = new QAction(tr("Importa sensore"), this);
+    editSensorAction = new QAction(tr("Modifica Sensore"), this);
+    deleteSensorAction = new QAction(tr("Rimuovi Sensore"), this);
+
+    fileMenu->addAction(newSensorAction);
+    fileMenu->addAction(importSensorAction);
+    fileMenu->addAction(editSensorAction);
+    fileMenu->addAction(deleteSensorAction);
+
+    connect(newSensorAction, &QAction::triggered, this, &MainWindow::addNewSensor);
+    connect(importSensorAction, &QAction::triggered, this, &MainWindow::importSensor);
+    connect(editSensorAction, &QAction::triggered, this, &MainWindow::editSensor);
+    connect(deleteSensorAction, &QAction::triggered, this, &MainWindow::deleteSensor);
+
+    // Creazione layout principale
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->setMenuBar(menuBar);
+    mainLayout->addLayout(layout);
+    setLayout(mainLayout);
+
     // Creazione di un layout orizzontale per i pulsanti
     QHBoxLayout *buttonLayout = new QHBoxLayout;
-    QPushButton *addButton = new QPushButton("+");
-    QPushButton *removeButton = new QPushButton("-");
-    buttonLayout->addWidget(&searchBox);
+    buttonLayout->addWidget(searchBox);
     buttonLayout->addWidget(addButton);
     buttonLayout->addWidget(removeButton);
 
-    listWidget.setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(&listWidget, &QListWidget::customContextMenuRequested, this, &MainWindow::showContextMenu);
+    listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(listWidget, &QListWidget::customContextMenuRequested, this, &MainWindow::showContextMenu);
 
     // Creazione del menu per il pulsante "+"
     QMenu *addMenu = new QMenu(this);
-    QAction *newSensorAction = new QAction(tr("Nuovo sensore"), this);
+    QAction *newSensorActionBtn = new QAction(tr("Nuovo sensore"), this);
     QAction *importFromFileAction = new QAction(tr("Importa da file"), this);
-    addMenu->addAction(newSensorAction);
+    addMenu->addAction(newSensorActionBtn);
     addMenu->addAction(importFromFileAction);
     addButton->setMenu(addMenu);
 
     // Connessione del pulsante "+" a uno slot per aggiungere un nuovo sensore da GUI
     connect(addButton, &QPushButton::clicked, this, [this]()
-            { SensorOperations::addSensor(&listWidget, this); });
-    connect(newSensorAction, &QAction::triggered, this, [this]()
-            { SensorOperations::newSensor(&listWidget, this); });
+            { SensorOperations::addSensor(listWidget, this); });
+    connect(newSensorActionBtn, &QAction::triggered, this, [this]()
+            { SensorOperations::newSensor(listWidget, this); });
     // Connessione del pulsante "+" a uno slot per importare un sensore da file
     connect(importFromFileAction, &QAction::triggered, this, [this]()
-            { SensorOperations::addSensor(&listWidget, this); });
+            { SensorOperations::addSensor(listWidget, this); });
     connect(removeButton, &QPushButton::clicked, this, [this]()
-            { SensorOperations::deleteSensor(&listWidget, this); });
+            { SensorOperations::deleteSensor(listWidget, this); });
 
     // Creazione dello spazio per la lista di sensori a sx
     QVBoxLayout *leftLayout = new QVBoxLayout;
     leftLayout->addLayout(buttonLayout);
-    leftLayout->addWidget(&listWidget);
+    leftLayout->addWidget(listWidget);
 
     layout->addLayout(leftLayout);
 
+    // Creazione layout destro
     rightLayout = new QVBoxLayout;
-    rightLayout->addWidget(&detailsLabel);
-    rightLayout->addWidget(&currentValueLabel); // Aggiungiamo il currentValueLabel al layout
+    rightLayout->addWidget(detailsLabel);
+    rightLayout->addWidget(currentValueLabel); // Aggiungiamo il currentValueLabel al layout
     rightLayout->addWidget(chartView);
 
     QHBoxLayout *simulationButtonsLayout = new QHBoxLayout; // Layout orizzontale per i pulsanti di simulazione
@@ -75,10 +103,10 @@ MainWindow::MainWindow(QWidget *parent)
     layout->addLayout(rightLayout);
 
     // Impostazione una dimensione dell'icona personalizzata
-    listWidget.setIconSize(QSize(48, 48)); // Imposta la dimensione desiderata delle icone
+    listWidget->setIconSize(QSize(48, 48)); // Imposta la dimensione desiderata delle icone
 
     // Connessione la casella di ricerca al filtro
-    connect(&searchBox, &QLineEdit::textChanged, this, &MainWindow::filterSensors);
+    connect(searchBox, &QLineEdit::textChanged, this, &MainWindow::filterSensors);
 
     resize(1000, 500);
 
@@ -87,10 +115,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(sensorSimulation, &SensorSimulation::newSensorData, this, &MainWindow::handleNewSensorData);
 
     // Inizializzazione del gestore della simulazione
-    sensorSimulationManager = new SensorSimulationManager(chartView, &detailsLabel, &currentValueLabel, &listWidget, this);
+    sensorSimulationManager = new SensorSimulationManager(chartView, detailsLabel, currentValueLabel, listWidget, this);
     connect(startSimulationButton, &QPushButton::clicked, sensorSimulationManager, &SensorSimulationManager::startSimulation);
     connect(stopSimulationButton, &QPushButton::clicked, sensorSimulationManager, &SensorSimulationManager::stopSimulation);
-    connect(&listWidget, &QListWidget::itemSelectionChanged, sensorSimulationManager, &SensorSimulationManager::displaySensorDetails);
+    connect(listWidget, &QListWidget::itemSelectionChanged, sensorSimulationManager, &SensorSimulationManager::displaySensorDetails);
 
     // Ottenimento dell'elenco dei sensori istanziati
     std::unordered_map<unsigned int, sensor *> &sensors = sensor::getSensors();
@@ -119,7 +147,7 @@ MainWindow::MainWindow(QWidget *parent)
         }
 
         item->setIcon(QIcon(imagePath));
-        listWidget.addItem(item);
+        listWidget->addItem(item);
     }
 
     // Impostazione delle proporzioni dei widget
@@ -135,16 +163,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::filterSensors(const QString &text)
 {
-    for (int i = 0; i < listWidget.count(); ++i)
+    for (int i = 0; i < listWidget->count(); ++i)
     {
-        QListWidgetItem *item = listWidget.item(i);
+        QListWidgetItem *item = listWidget->item(i);
         item->setHidden(!item->text().contains(text, Qt::CaseInsensitive));
     }
 }
 
 void MainWindow::showContextMenu(const QPoint &pos)
 {
-    QListWidgetItem *selectedItem = listWidget.currentItem();
+    QListWidgetItem *selectedItem = listWidget->currentItem();
     if (!selectedItem)
     {
         QMessageBox::warning(this, tr("Errore"), tr("Nessun sensore selezionato"));
@@ -155,18 +183,38 @@ void MainWindow::showContextMenu(const QPoint &pos)
 
     QAction actionEdit("Modifica", this);
     connect(&actionEdit, &QAction::triggered, this, [this]()
-            { SensorOperations::editSensor(&listWidget, this); });
+            { SensorOperations::editSensor(listWidget, this); });
     contextMenu.addAction(&actionEdit);
 
     QAction actionExport("Esporta", this);
     connect(&actionExport, &QAction::triggered, this, [this]()
-            { SensorOperations::exportSensor(&listWidget, this); });
+            { SensorOperations::exportSensor(listWidget, this); });
     contextMenu.addAction(&actionExport);
 
-    contextMenu.exec(listWidget.mapToGlobal(pos));
+    contextMenu.exec(listWidget->mapToGlobal(pos));
 }
 
 void MainWindow::handleNewSensorData(int sensorId, double time, double value)
 {
-    SensorDataHandler::handleNewSensorData(sensorId, time, value, chartView, &currentValueLabel, this);
+    SensorDataHandler::handleNewSensorData(sensorId, time, value, chartView, currentValueLabel, this);
+}
+
+void MainWindow::addNewSensor()
+{
+    SensorOperations::newSensor(listWidget, this);
+}
+
+void MainWindow::importSensor()
+{
+    SensorOperations::addSensor(listWidget, this);
+}
+
+void MainWindow::editSensor()
+{
+    SensorOperations::editSensor(listWidget, this);
+}
+
+void MainWindow::deleteSensor()
+{
+    SensorOperations::deleteSensor(listWidget, this);
 }
