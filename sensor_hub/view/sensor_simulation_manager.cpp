@@ -145,6 +145,19 @@ void SensorSimulationManager::startSimulation()
     {
         sensor *s = it->second;
 
+        // Verifica se ci sono dati del grafico
+        if (!s->getChartData().empty())
+        {
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(parent, tr("Conferma"),
+                                          tr("Avviando una nuova simulazione i dati di simulazioni passate verranno sovrascritti, continuare?"),
+                                          QMessageBox::Yes | QMessageBox::No);
+            if (reply == QMessageBox::No)
+            {
+                return;
+            }
+        }
+
         // Cancella i dati del grafico precedente sia dal grafico che dal file
         s->clearChartData();
 
