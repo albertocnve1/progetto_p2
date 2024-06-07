@@ -22,11 +22,17 @@
 #include <QIcon>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QWidget(parent), layout(new QHBoxLayout(this)), searchBox(new QLineEdit), listWidget(new QListWidget),
-    detailsLabel(new QLabel), currentValueLabel(new QLabel), chartView(new QChartView),
-    addButton(new QPushButton("+")), removeButton(new QPushButton("-")),
-    startSimulationButton(new QPushButton("Avvia nuova simulazione")), stopSimulationButton(new QPushButton("Interrompi Simulazione"))
+    : QWidget(parent), layout(new QHBoxLayout), searchBox(new QLineEdit), listWidget(new QListWidget),
+    detailsLabel(new QLabel), currentValueLabel(new QLabel), addButton(new QPushButton("+")),
+    removeButton(new QPushButton("-")), startSimulationButton(new QPushButton("Avvia nuova simulazione")), stopSimulationButton(new QPushButton("Interrompi Simulazione")),
+    chartView(new QChartView), rightLayout(new QVBoxLayout)  // startSimulationButton e stopSimulationButton sono inizializzati prima di chartView
 {
+    // Impostare il titolo della finestra
+    setWindowTitle("Sensor Hub");
+
+    // Impostare le dimensioni minime della finestra
+    setMinimumSize(1000, 500);
+
     // Creazione della barra dei menu
     menuBar = new QMenuBar(this);
     fileMenu = new QMenu(tr("File"), this);
@@ -46,12 +52,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(importSensorAction, &QAction::triggered, this, &MainWindow::importSensor);
     connect(editSensorAction, &QAction::triggered, this, &MainWindow::editSensor);
     connect(deleteSensorAction, &QAction::triggered, this, &MainWindow::deleteSensor);
-
-    // Creazione layout principale
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->setMenuBar(menuBar);
-    mainLayout->addLayout(layout);
-    setLayout(mainLayout);
 
     // Creazione di un layout orizzontale per i pulsanti
     QHBoxLayout *buttonLayout = new QHBoxLayout;
@@ -86,7 +86,7 @@ MainWindow::MainWindow(QWidget *parent)
     leftLayout->addLayout(buttonLayout);
     leftLayout->addWidget(listWidget);
 
-    layout->addLayout(leftLayout);
+    layout->addLayout(leftLayout); // Assegna leftLayout al layout principale
 
     // Creazione layout destro
     rightLayout = new QVBoxLayout;
@@ -100,13 +100,19 @@ MainWindow::MainWindow(QWidget *parent)
 
     rightLayout->addLayout(simulationButtonsLayout); // Aggiungi il layout dei pulsanti di simulazione
 
-    layout->addLayout(rightLayout);
+    layout->addLayout(rightLayout); // Assegna rightLayout al layout principale
 
     // Impostazione una dimensione dell'icona personalizzata
     listWidget->setIconSize(QSize(48, 48)); // Imposta la dimensione desiderata delle icone
 
     // Connessione la casella di ricerca al filtro
     connect(searchBox, &QLineEdit::textChanged, this, &MainWindow::filterSensors);
+
+    // Creazione layout principale
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->setMenuBar(menuBar);
+    mainLayout->addLayout(layout);
+    setLayout(mainLayout);
 
     resize(1000, 500);
 
@@ -159,6 +165,21 @@ MainWindow::~MainWindow()
 {
     delete sensorSimulation;
     delete sensorSimulationManager;
+}
+
+void MainWindow::updateSensorDetails()
+{
+    QListWidgetItem *currentItem = listWidget->currentItem();
+    if (currentItem)
+    {
+        sensorSimulationManager->displaySensorDetails();
+    }
+    else
+    {
+        detailsLabel->clear();
+        currentValueLabel->clear();
+        chartView->chart()->removeAllSeries();
+    }
 }
 
 void MainWindow::filterSensors(const QString &text)
@@ -219,19 +240,4 @@ void MainWindow::deleteSensor()
     SensorOperations::deleteSensor(listWidget, this);
 }
 
-void MainWindow::updateSensorDetails()
-{
-    QListWidgetItem *currentItem = listWidget->currentItem();
-    if (currentItem)
-    {
-        unsigned int id = currentItem->text().split(":")[0].toUInt();
-        sensorSimulationManager->displaySensorDetails();
-    }
-    else
-    {
-        detailsLabel->clear();
-        currentValueLabel->clear();
-        chartView->chart()->removeAllSeries();
-    }
-}
 

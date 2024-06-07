@@ -1,6 +1,5 @@
-#include "mainwindow.h"
-#include "load_sensors.h"
-
+#include <functions/load_sensors.h>
+#include <view/mainwindow.h>
 #include <QApplication>
 
 int main(int argc, char *argv[])

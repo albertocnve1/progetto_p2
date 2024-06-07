@@ -1,7 +1,8 @@
-<!DOCTYPE RCC><RCC version="1.0">
-<qresource prefix="/assets">
-    <file alias="dust_sensor_icon.png">assets/dust_sensor_icon.png</file>
-    <file alias="temperature_sensor_icon.png">assets/temperature_sensor_icon.png</file>
-    <file alias="humidity_sensor_icon.png">assets/humidity_sensor_icon.png</file>
-</qresource>
+<RCC>
+    <qresource prefix="/assets">
+        <file alias="dust_sensor_icon.png">assets/dust_sensor_icon.png</file>
+        <file alias="temperature_sensor_icon.png">assets/temperature_sensor_icon.png</file>
+        <file alias="humidity_sensor_icon.png">assets/humidity_sensor_icon.png</file>
+        <file>assets/main_icon.png</file>
+    </qresource>
 </RCC>
