@@ -218,3 +218,20 @@ void MainWindow::deleteSensor()
 {
     SensorOperations::deleteSensor(listWidget, this);
 }
+
+void MainWindow::updateSensorDetails()
+{
+    QListWidgetItem *currentItem = listWidget->currentItem();
+    if (currentItem)
+    {
+        unsigned int id = currentItem->text().split(":")[0].toUInt();
+        sensorSimulationManager->displaySensorDetails();
+    }
+    else
+    {
+        detailsLabel->clear();
+        currentValueLabel->clear();
+        chartView->chart()->removeAllSeries();
+    }
+}
+

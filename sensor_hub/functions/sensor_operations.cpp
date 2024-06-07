@@ -4,8 +4,8 @@
 #include "sensors/temperature_sensor.h"
 #include "sensors/humidity_sensor.h"
 #include "functions/sensordialog.h"
+#include "view/mainwindow.h"
 
-#include <QDebug>
 
 QRegularExpression re("[A-Za-z]");
 
@@ -15,14 +15,12 @@ std::vector<std::pair<double, double>> SensorOperations::readChartDataFromFile(Q
     while (!in.atEnd())
     {
         QString dataLine = in.readLine().trimmed();
-        qDebug() << "Chart Data Line:" << dataLine;
         QStringList dataParts = dataLine.split(",");
         if (dataParts.size() == 2)
         {
             double time = dataParts[0].toDouble();
             double value = dataParts[1].toDouble();
             chartData.emplace_back(time, value);
-            qDebug() << "Read Chart Data - Time:" << time << ", Value:" << value;
         }
     }
     return chartData;
@@ -167,7 +165,6 @@ void SensorOperations::addSensor(QListWidget *listWidget, QWidget *parent)
                 dust_sensor *sensor = dust_sensor::create(name, id, precision);
                 for (const auto &data : chartData)
                 {
-                    qDebug() << "Dust Sensor Chart Data - Time:" << data.first << ", Value:" << data.second;
                     sensor->addChartData(data.first, data.second);
                     sensor->updateSensorData(data.first, data.second);
                 }
@@ -180,7 +177,6 @@ void SensorOperations::addSensor(QListWidget *listWidget, QWidget *parent)
                 temperature_sensor *sensor = temperature_sensor::create(name, id, precision);
                 for (const auto &data : chartData)
                 {
-                    qDebug() << "Temperature Sensor Chart Data - Time:" << data.first << ", Value:" << data.second;
                     sensor->addChartData(data.first, data.second);
                     sensor->updateSensorData(data.first, data.second);
                 }
@@ -193,7 +189,6 @@ void SensorOperations::addSensor(QListWidget *listWidget, QWidget *parent)
                 humidity_sensor *sensor = humidity_sensor::create(name, id, precision);
                 for (const auto &data : chartData)
                 {
-                    qDebug() << "Humidity Sensor Chart Data - Time:" << data.first << ", Value:" << data.second;
                     sensor->addChartData(data.first, data.second);
                     sensor->updateSensorData(data.first, data.second);
                 }
@@ -201,7 +196,6 @@ void SensorOperations::addSensor(QListWidget *listWidget, QWidget *parent)
                 item->setIcon(QIcon(imagePath));
                 listWidget->addItem(item);
             }
-            qDebug() << "Sensor added to list widget with image path:" << imagePath;
         }
         catch (const std::runtime_error &e)
         {
@@ -298,6 +292,13 @@ void SensorOperations::deleteSensor(QListWidget *listWidget, QWidget *parent)
         delete listWidget->takeItem(listWidget->row(item));
 
         listWidget->blockSignals(false);
+
+        // Aggiorna i dettagli del sensore e il grafico
+        MainWindow *mainWindow = qobject_cast<MainWindow *>(parent);
+        if (mainWindow)
+        {
+            mainWindow->updateSensorDetails();
+        }
     }
     else
     {

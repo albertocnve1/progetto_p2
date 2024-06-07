@@ -15,7 +15,7 @@
 class SensorDataHandler
 {
 public:
-    static void handleNewSensorData(int sensorId, double time, double value, QChartView *chartView, QLabel *currentValueLabel, QWidget *parent);
+    static void handleNewSensorData(int, double, double, QChartView *, QLabel *, QWidget *);
 };
 
 #endif // SENSOR_DATA_HANDLER_H

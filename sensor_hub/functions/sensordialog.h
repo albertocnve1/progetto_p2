@@ -10,7 +10,7 @@ class SensorDialog : public QDialog
     Q_OBJECT
 
 public:
-    SensorDialog(QWidget *parent = nullptr);
+    SensorDialog(QWidget * = nullptr);
 
     QLineEdit *idEdit;
     QComboBox *typeEdit;

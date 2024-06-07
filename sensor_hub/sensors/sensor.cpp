@@ -103,7 +103,6 @@ void sensor::updateFile(std::string newName)
 void sensor::addChartData(double time, double value)
 {
     chartData.emplace_back(time, value);
-    qDebug() << "ChartData added - Time:" << time << ", Value:" << value;
 }
 
 void sensor::clearChartData()

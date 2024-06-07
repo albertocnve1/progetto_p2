@@ -11,12 +11,12 @@ class SensorSimulation : public QObject
     Q_OBJECT
 
 public:
-    explicit SensorSimulation(QObject *parent = nullptr);
-    void simulateSensor(unsigned int sensorId);
+    explicit SensorSimulation(QObject * = nullptr);
+    void simulateSensor(unsigned int);
     void stopSimulation();
 
 signals:
-    void newSensorData(int sensorId, double time, double value);
+    void newSensorData(int, double, double);
 
 private slots:
     void generateSensorData();

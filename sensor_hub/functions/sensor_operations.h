@@ -17,11 +17,11 @@
 class SensorOperations
 {
 public:
-    static void editSensor(QListWidget *listWidget, QWidget *parent);
-    static void exportSensor(QListWidget *listWidget, QWidget *parent);
-    static void addSensor(QListWidget *listWidget, QWidget *parent);
-    static void newSensor(QListWidget *listWidget, QWidget *parent);
-    static void deleteSensor(QListWidget *listWidget, QWidget *parent);
+    static void editSensor(QListWidget *, QWidget *);
+    static void exportSensor(QListWidget *, QWidget *);
+    static void addSensor(QListWidget *, QWidget *);
+    static void newSensor(QListWidget *, QWidget *);
+    static void deleteSensor(QListWidget *, QWidget *);
 private:
     static std::vector<std::pair<double, double>> readChartDataFromFile(QTextStream &);
 

@@ -33,6 +33,7 @@ class MainWindow : public QWidget
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
+    void updateSensorDetails();
     ~MainWindow();
 
 private slots:

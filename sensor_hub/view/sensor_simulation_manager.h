@@ -14,7 +14,7 @@ class SensorSimulationManager : public QObject
     Q_OBJECT
 
 public:
-    explicit SensorSimulationManager(QChartView *chartView, QLabel *detailsLabel, QLabel *currentValueLabel, QListWidget *listWidget, QWidget *parent = nullptr);
+    explicit SensorSimulationManager(QChartView *, QLabel *, QLabel *, QListWidget *, QWidget * = nullptr);
 
 public slots:
     void displaySensorDetails();
