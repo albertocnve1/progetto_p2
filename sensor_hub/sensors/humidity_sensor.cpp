@@ -1,7 +1,5 @@
 #include "humidity_sensor.h"
 #include <QDir>
-#include <QFile>
-#include <QTextStream>
 
 void humidity_sensor::createFile() const
 {

@@ -1,9 +1,7 @@
 #ifndef SENSOR_SIMULATION_H
 #define SENSOR_SIMULATION_H
 
-#include <QObject>
 #include <QTimer>
-#include <unordered_map>
 #include "sensors/sensor.h"
 
 class SensorSimulation : public QObject

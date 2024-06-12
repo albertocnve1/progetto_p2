@@ -1,11 +1,9 @@
-#include <QRegularExpression>
 #include "sensor_operations.h"
 #include "sensors/dust_sensor.h"
 #include "sensors/temperature_sensor.h"
 #include "sensors/humidity_sensor.h"
 #include "functions/sensordialog.h"
 #include "view/mainwindow.h"
-
 
 QRegularExpression re("[A-Za-z]");
 

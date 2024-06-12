@@ -5,13 +5,6 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QFileDialog>
-#include <QDir>
-#include <QLineEdit>
-#include <QChartView>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QPushButton>
-#include <unordered_map>
 #include "sensors/sensor.h"
 
 class SensorOperations

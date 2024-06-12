@@ -2,7 +2,7 @@
 #include "sensors/dust_sensor.h"
 #include "sensors/temperature_sensor.h"
 #include "sensors/humidity_sensor.h"
-#include <cmath>
+
 #include <QRandomGenerator>
 #include <QDateTime>
 

@@ -1,7 +1,5 @@
 #include "temperature_sensor.h"
 #include <QDir>
-#include <QFile>
-#include <QTextStream>
 
 void temperature_sensor::createFile() const
 {

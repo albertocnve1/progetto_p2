@@ -1,8 +1,5 @@
 #include "sensor.h"
 #include <QDir>
-#include <QFile>
-#include <QTextStream>
-#include <stdexcept>
 
 unsigned int sensor::nextID = 0;
 std::unordered_map<unsigned int, sensor *> sensor::sensors;

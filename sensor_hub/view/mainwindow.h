@@ -3,21 +3,9 @@
 
 #include <QWidget>
 #include <QHBoxLayout>
-#include <QVBoxLayout>
 #include <QPushButton>
-#include <QListWidget>
-#include <QLineEdit>
-#include <QLabel>
-#include <QPoint>
-#include <QChartView>
-#include <QLineSeries>
 #include <QMenuBar>
-#include <QMenu>
-#include <QAction>
-#include "functions/sensor_simulation.h"
-#include "functions/load_sensors.h"
-#include "functions/sensor_operations.h"
-#include "sensor_data_handler.h"
+
 #include "sensor_simulation_manager.h"
 
 QT_BEGIN_NAMESPACE

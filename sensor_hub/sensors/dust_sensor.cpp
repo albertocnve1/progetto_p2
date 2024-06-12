@@ -1,7 +1,5 @@
 #include "dust_sensor.h"
 #include <QDir>
-#include <QFile>
-#include <QTextStream>
 
 void dust_sensor::createFile() const
 {
