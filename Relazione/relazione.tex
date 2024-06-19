@@ -68,9 +68,9 @@
     \noindent Il modello parte da una classe astratta \textbf{“sensor”} che contiene le informazioni comuni a tutti i tipi di sensori, quali: \textbf{ID}, \textbf{nome} e \textbf{precisione}.
     Per entrambi gli attributi comuni sono stati implementati dei metodi getter e nel caso del nome è stato implementato il rispettivo metodo setter per permettere la modifica del nome del sensore anche dopo l’istanziazione. 
 
-    \noindent La classe astratta, implementa una struttura dati di tipo \textbf{std::unordered\_map} che memorizza coppie di dati ID + puntatore a sensore, in modo da tenere traccia di tutti gli ID già in uso e di evitare doippioni.
+    \noindent La classe astratta, implementa una struttura dati di tipo \textbf{std::unordered\_map} che memorizza coppie di dati ID + puntatore a sensore, in modo da tenere traccia di tutti gli ID già in uso e di evitare doppioni.
 
-    \noindent Sono inoltre presenti metodi concreti, comunti a tutti i tipi di sensori, che permettono la gestione della simulazione, garantendo la persistenza dei dati, i metodi sono:
+    \noindent Sono inoltre presenti metodi concreti, comuni a tutti i tipi di sensori, che permettono la gestione della simulazione, garantendo la persistenza dei dati, i metodi sono:
     \textbf{addChartData()}, \textbf{clearChartData()}, \textbf{updateSensorData()} e \textbf{loadChartDataFromFile()}.
 
     \noindent Infine sono presenti dei metodi virtuali puri, in quanto la loro implementazione e funzione varia in base al tipo di sensore, questi metodi sono: \textbf{clone()} e \textbf{createFile()}.

@@ -25,12 +25,12 @@ MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent), layout(new QHBoxLayout), searchBox(new QLineEdit), listWidget(new QListWidget),
     detailsLabel(new QLabel), currentValueLabel(new QLabel), addButton(new QPushButton("+")),
     removeButton(new QPushButton("-")), startSimulationButton(new QPushButton("Avvia nuova simulazione")), stopSimulationButton(new QPushButton("Interrompi Simulazione")),
-    chartView(new QChartView), rightLayout(new QVBoxLayout)  // startSimulationButton e stopSimulationButton sono inizializzati prima di chartView
+    chartView(new QChartView), rightLayout(new QVBoxLayout)
 {
     // Impostare il titolo della finestra
     setWindowTitle("Sensor Hub");
 
-    // Impostare le dimensioni minime della finestra
+    // Impostare le dimensioni minime della finestra in modo che rimpicciolendola non si abbiano problemi
     setMinimumSize(1000, 500);
 
     // Creazione della barra dei menu
@@ -91,19 +91,19 @@ MainWindow::MainWindow(QWidget *parent)
     // Creazione layout destro
     rightLayout = new QVBoxLayout;
     rightLayout->addWidget(detailsLabel);
-    rightLayout->addWidget(currentValueLabel); // Aggiungiamo il currentValueLabel al layout
+    rightLayout->addWidget(currentValueLabel);
     rightLayout->addWidget(chartView);
 
     QHBoxLayout *simulationButtonsLayout = new QHBoxLayout; // Layout orizzontale per i pulsanti di simulazione
     simulationButtonsLayout->addWidget(startSimulationButton);
     simulationButtonsLayout->addWidget(stopSimulationButton);
 
-    rightLayout->addLayout(simulationButtonsLayout); // Aggiungi il layout dei pulsanti di simulazione
+    rightLayout->addLayout(simulationButtonsLayout);
 
-    layout->addLayout(rightLayout); // Assegna rightLayout al layout principale
+    layout->addLayout(rightLayout);
 
-    // Impostazione una dimensione dell'icona personalizzata
-    listWidget->setIconSize(QSize(48, 48)); // Imposta la dimensione desiderata delle icone
+    // Impostazione dimensione dell'icona
+    listWidget->setIconSize(QSize(48, 48));
 
     // Connessione la casella di ricerca al filtro
     connect(searchBox, &QLineEdit::textChanged, this, &MainWindow::filterSensors);
@@ -126,10 +126,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(stopSimulationButton, &QPushButton::clicked, sensorSimulationManager, &SensorSimulationManager::stopSimulation);
     connect(listWidget, &QListWidget::itemSelectionChanged, sensorSimulationManager, &SensorSimulationManager::displaySensorDetails);
 
-    // Ottenimento dell'elenco dei sensori istanziati
-    std::unordered_map<unsigned int, sensor *> &sensors = sensor::getSensors();
-
     // Aggiunta dei sensori istanziati all'elenco laterale sx
+    std::unordered_map<unsigned int, sensor *> &sensors = sensor::getSensors();
     for (const auto &pair : sensors)
     {
         sensor *s = pair.second;
@@ -137,7 +135,7 @@ MainWindow::MainWindow(QWidget *parent)
         QListWidgetItem *item = new QListWidgetItem(sensorInfo);
 
         // Aggiunta dell'immagine in base al tipo di sensore
-        QString imagePath = ":/assets/default.png"; // Percorso predefinito
+        QString imagePath = ":/assets/default.png";
 
         if (dynamic_cast<dust_sensor *>(s))
         {
@@ -155,8 +153,6 @@ MainWindow::MainWindow(QWidget *parent)
         item->setIcon(QIcon(imagePath));
         listWidget->addItem(item);
     }
-
-    // Impostazione delle proporzioni dei widget
     this->layout->setStretchFactor(leftLayout, 1);
     this->layout->setStretchFactor(rightLayout, 3);
 }

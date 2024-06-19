@@ -8,10 +8,10 @@ void temperature_sensor::createFile() const
     dir.mkdir(currentPath + "/sensors_list");
     QFile file(currentPath + "/sensors_list/" + QString::number(getID()) + ".txt");
 
-    // Check if the file already exists
+    // Se il file esiste già non viene sovrascritto in modo da preservare la persistenza dei dati
     if (file.exists())
     {
-        return; // File already exists, do not overwrite
+        return; //
     }
 
     // Open the file in write mode (overwrite if exists)

@@ -42,7 +42,7 @@ void SensorDataHandler::handleNewSensorData(int sensorId, double time, double va
             axisX->setTitleText("Tempo (s)");
             QValueAxis *axisY = new QValueAxis;
 
-            // Usare dynamic_cast per determinare il tipo di sensore e impostare i limiti dell'asse Y
+            // dynamic_cast per determinare il tipo di sensore e impostare i limiti dell'asse Y
             if (dynamic_cast<dust_sensor *>(s))
             {
                 axisY->setRange(0, 50);
@@ -66,8 +66,6 @@ void SensorDataHandler::handleNewSensorData(int sensorId, double time, double va
 
             chart->legend()->hide(); // Nascondere la leggenda
 
-            // Imposta un intervallo iniziale di 20 secondi per l'asse X
-
             chartView->setChart(chart);
         }
 
@@ -83,7 +81,7 @@ void SensorDataHandler::handleNewSensorData(int sensorId, double time, double va
                 double currentMax = axisX->max();
                 if (time > currentMax)
                 {
-                    axisX->setRange(0, currentMax * 2); // Raddoppia l'intervallo dell'asse X
+                    axisX->setRange(0, currentMax * 2); // Raddoppia l'intervallo dell'asse X in caso venga ecceduta
                 }
             }
         }
@@ -95,7 +93,7 @@ void SensorDataHandler::handleNewSensorData(int sensorId, double time, double va
             QValueAxis *axisY = qobject_cast<QValueAxis *>(axesY.first());
             if (axisY)
             {
-                // Usare dynamic_cast per determinare il tipo di sensore e impostare il titolo dell'asse Y
+                // dynamic_cast per determinare il tipo di sensore e impostare il titolo dell'asse Y
                 if (dynamic_cast<dust_sensor *>(s))
                 {
                     axisY->setTitleText("PM10 (µg/m³)");
@@ -110,8 +108,7 @@ void SensorDataHandler::handleNewSensorData(int sensorId, double time, double va
                 }
             }
         }
-
-        // Nascondi la leggenda ogni volta che il grafico viene aggiornato
+        // mantenimento della legenda nascosta
         if (chart)
         {
             chart->legend()->hide();

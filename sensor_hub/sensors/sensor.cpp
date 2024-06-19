@@ -122,21 +122,21 @@ void sensor::clearChartData()
             }
             lines.append(line);
         }
-        file.resize(0); // Clear the file content
+        file.resize(0);
         for (const QString &line : lines)
         {
             in << line << "\n";
         }
-        in << "Chart Data:\n"; // Add the header for chart data
+        in << "Chart Data:\n";
     }
 }
 
 void sensor::updateSensorData(double time, double value) const
 {
-    const_cast<sensor *>(this)->addChartData(time, value); // Remove const to update data
+    const_cast<sensor *>(this)->addChartData(time, value);
     QString currentPath = QDir::currentPath();
     QFile file(currentPath + "/sensors_list/" + QString::number(getID()) + ".txt");
-    if (file.open(QIODevice::Append | QIODevice::Text)) // Use Append instead of WriteOnly
+    if (file.open(QIODevice::Append | QIODevice::Text))
     {
         QTextStream out(&file);
         out << time << "," << value << "\n";

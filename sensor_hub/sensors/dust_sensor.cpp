@@ -8,7 +8,7 @@ void dust_sensor::createFile() const
     dir.mkdir(currentPath + "/sensors_list");
     QFile file(currentPath + "/sensors_list/" + QString::number(getID()) + ".txt");
 
-    // se il file esiste già non veiene sovrascritto
+    // Se il file esiste già non viene sovrascritto in modo da preservare la persistenza dei dati
     if (file.exists())
     {
         return;

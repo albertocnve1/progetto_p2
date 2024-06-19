@@ -145,7 +145,7 @@ void SensorSimulationManager::startSimulation()
     {
         sensor *s = it->second;
 
-        // Verifica se ci sono dati del grafico
+        // Verifica se ci sono dati relativi a una simulazione passata
         if (!s->getChartData().empty())
         {
             QMessageBox::StandardButton reply;

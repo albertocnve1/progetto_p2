@@ -5,6 +5,7 @@
 
 #include <QRandomGenerator>
 #include <QDateTime>
+#include <cmath>
 
 SensorSimulation::SensorSimulation(QObject *parent) : QObject(parent), simulationTimer(new QTimer(this)), startTime(0)
 {
@@ -40,7 +41,6 @@ void SensorSimulation::stopSimulation()
     simulationTimer->stop();
 }
 
-#include <cmath> // Per la funzione round
 
 void SensorSimulation::generateSensorData()
 {
@@ -72,7 +72,7 @@ void SensorSimulation::generateSensorData()
 
         s->updateSensorData(relativeTime, value);
 
-        emit newSensorData(currentSensorId, relativeTime, value); // Usa il tempo relativo
+        emit newSensorData(currentSensorId, relativeTime, value);
     }
 }
 

@@ -26,9 +26,9 @@ public:
 
 
 private slots:
-    void filterSensors(const QString &text);
+    void filterSensors(const QString &);
     void showContextMenu(const QPoint &);
-    void handleNewSensorData(int sensorId, double time, double value);
+    void handleNewSensorData(int, double, double);
     void addNewSensor();
     void importSensor();
     void editSensor();
@@ -46,7 +46,7 @@ private:
     QPushButton *stopSimulationButton;
     QChartView *chartView;
     QVBoxLayout *rightLayout;
-    QString getAxisLabel(const std::string &sensorType);
+    QString getAxisLabel(const std::string &);
     SensorSimulation *sensorSimulation;
     SensorSimulationManager *sensorSimulationManager;
     QMenuBar *menuBar;
