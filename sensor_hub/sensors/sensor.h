@@ -2,6 +2,8 @@
 #define SENSOR_H
 
 #include <string>
+#include <unordered_map>
+#include <vector>
 
 class sensor
 {
